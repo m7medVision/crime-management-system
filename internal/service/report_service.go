@@ -13,12 +13,14 @@ import (
 type ReportService struct {
 	reportRepo *repository.ReportRepository
 	caseRepo   *repository.CaseRepository
+	userRepo   *repository.UserRepository
 }
 
-func NewReportService(reportRepo *repository.ReportRepository, caseRepo *repository.CaseRepository) *ReportService {
+func NewReportService(reportRepo *repository.ReportRepository, caseRepo *repository.CaseRepository, userRepo *repository.UserRepository) *ReportService {
 	return &ReportService{
 		reportRepo: reportRepo,
 		caseRepo:   caseRepo,
+		userRepo:   userRepo,
 	}
 }
 

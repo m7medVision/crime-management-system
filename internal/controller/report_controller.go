@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/m7medVision/crime-management-system/internal/service"
+	"github.com/m7medVision/crime-management-system/internal/dto"
 )
 
 type ReportController struct {

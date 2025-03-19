@@ -37,10 +37,10 @@ func main() {
 	// Initialize services
 	authService := service.NewAuthService(userRepo, cfg.Auth.Secret, cfg.Auth.ExpiryTime)
 	caseService := service.NewCaseService(caseRepo, userRepo)
-	evidenceService := service.NewEvidenceService(evidenceRepo, auditLogRepo)
-	reportService := service.NewReportService(reportRepo)
+	evidenceService := service.NewEvidenceService(evidenceRepo)
+	reportService := service.NewReportService(reportRepo, caseRepo)
 	textAnalysisService := service.NewTextAnalysisService(textAnalysisRepo)
-	linkExtractionService := service.NewLinkExtractionService(linkExtractionRepo)
+	linkExtractionService := service.NewLinkExtractionService(caseRepo)
 	auditLogService := service.NewAuditLogService(auditLogRepo)
 
 	// Initialize controllers
