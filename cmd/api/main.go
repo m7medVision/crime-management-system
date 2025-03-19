@@ -28,14 +28,29 @@ func main() {
 	// Initialize repositories
 	userRepo := repository.NewUserRepository(db)
 	caseRepo := repository.NewCaseRepository(db)
+	evidenceRepo := repository.NewEvidenceRepository(db)
+	reportRepo := repository.NewReportRepository(db)
+	auditLogRepo := repository.NewAuditLogRepository(db)
+	textAnalysisRepo := repository.NewTextAnalysisRepository(db)
+	linkExtractionRepo := repository.NewLinkExtractionRepository(db)
 
 	// Initialize services
 	authService := service.NewAuthService(userRepo, cfg.Auth.Secret, cfg.Auth.ExpiryTime)
 	caseService := service.NewCaseService(caseRepo, userRepo)
+	evidenceService := service.NewEvidenceService(evidenceRepo, auditLogRepo)
+	reportService := service.NewReportService(reportRepo)
+	textAnalysisService := service.NewTextAnalysisService(textAnalysisRepo)
+	linkExtractionService := service.NewLinkExtractionService(linkExtractionRepo)
+	auditLogService := service.NewAuditLogService(auditLogRepo)
 
 	// Initialize controllers
 	authController := controller.NewAuthController(authService)
 	caseController := controller.NewCaseController(caseService)
+	evidenceController := controller.NewEvidenceController(evidenceService)
+	reportController := controller.NewReportController(reportService)
+	textAnalysisController := controller.NewTextAnalysisController(textAnalysisService)
+	linkExtractionController := controller.NewLinkExtractionController(linkExtractionService)
+	auditLogController := controller.NewAuditLogController(auditLogService)
 
 	// Setup Gin router
 	router := gin.Default()
@@ -55,6 +70,23 @@ func main() {
 		protected.GET("/cases/:id/assignees", caseController.GetAssignees)
 		protected.POST("/cases/:id/assignees", caseController.AddAssignee)
 		protected.DELETE("/cases/:id/assignees", caseController.RemoveAssignee)
+
+		protected.POST("/evidence", evidenceController.RecordEvidence)
+		protected.GET("/evidence/:id", evidenceController.GetEvidenceByID)
+		protected.GET("/evidence/:id/image", evidenceController.GetEvidenceImageByID)
+		protected.PUT("/evidence/:id", evidenceController.UpdateEvidence)
+		protected.DELETE("/evidence/:id", evidenceController.SoftDeleteEvidence)
+
+		protected.GET("/audit-logs", auditLogController.GetAdminLogs)
+	}
+
+	// Public routes
+	public := router.Group("/")
+	{
+		public.POST("/reports", reportController.GenerateReport)
+		public.GET("/reports/:id/status", reportController.GetReportStatus)
+		public.GET("/text-analysis", textAnalysisController.ExtractTopWords)
+		public.GET("/cases/:id/links", linkExtractionController.ExtractLinks)
 	}
 
 	// Start server
