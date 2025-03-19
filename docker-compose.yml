@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: crime_management
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - APP_ENV=production
+      - SERVER_PORT=:8080
+      - SERVER_ENVIRONMENT=production
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=crime_management
+      - DB_SSLMODE=disable
+      - AUTH_SECRET=your-production-secret-key
+      - AUTH_EXPIRY_TIME=72
+      - EMAIL_RESEND_API_KEY=your-production-resend-api-key
+      - EMAIL_FROM=no-reply@districtcore.gov
+      - EMAIL_FROM_NAME=District Core Crime Management
+      - STORAGE_TYPE=local
+      - STORAGE_LOCAL_PATH=/app/storage
+    volumes:
+      - storage_data:/app/storage
+
+volumes:
+  db_data:
+  storage_data:
