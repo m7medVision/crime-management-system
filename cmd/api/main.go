@@ -10,6 +10,7 @@ import (
 	"github.com/m7medVision/crime-management-system/internal/repository"
 	"github.com/m7medVision/crime-management-system/internal/service"
 	"github.com/m7medVision/crime-management-system/internal/util"
+	"github.com/m7medVision/crime-management-system/internal/model"
 )
 
 func main() {
@@ -32,10 +33,12 @@ func main() {
 	// Initialize services
 	authService := service.NewAuthService(userRepo, cfg.Auth.Secret, cfg.Auth.ExpiryTime)
 	caseService := service.NewCaseService(caseRepo, userRepo)
+	userService := service.NewUserService(userRepo) // Initialize userService
 
 	// Initialize controllers
 	authController := controller.NewAuthController(authService)
 	caseController := controller.NewCaseController(caseService)
+	userController := controller.NewUserController(userService) // Initialize userController
 
 	// Setup Gin router
 	router := gin.Default()
@@ -55,6 +58,11 @@ func main() {
 		protected.GET("/cases/:id/assignees", caseController.GetAssignees)
 		protected.POST("/cases/:id/assignees", caseController.AddAssignee)
 		protected.DELETE("/cases/:id/assignees", caseController.RemoveAssignee)
+
+		// User management routes
+		protected.POST("/users", middleware.RequireRole(model.RoleAdmin), userController.CreateUser)
+		protected.PUT("/users/:id", middleware.RequireRole(model.RoleAdmin), userController.UpdateUser)
+		protected.DELETE("/users/:id", middleware.RequireRole(model.RoleAdmin), userController.DeleteUser)
 	}
 
 	// Start server
