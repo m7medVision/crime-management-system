@@ -96,3 +96,10 @@ func (s *CaseService) AddAssignee(caseID, userID uint) error {
 func (s *CaseService) RemoveAssignee(caseID, userID uint) error {
 	return s.caseRepo.RemoveAssignee(caseID, userID)
 }
+
+func (s *CaseService) SubmitCrimeReport(report *model.Report) (*model.Report, error) {
+	if err := s.caseRepo.CreateReport(report); err != nil {
+		return nil, err
+	}
+	return report, nil
+}

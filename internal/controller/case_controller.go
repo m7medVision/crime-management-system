@@ -186,3 +186,33 @@ func (ctrl *CaseController) RemoveAssignee(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Assignee removed successfully"})
 }
+
+func (ctrl *CaseController) SubmitCrimeReport(c *gin.Context) {
+	var reportDTO dto.ReportDTO
+	if err := c.ShouldBindJSON(&reportDTO); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid report data"})
+		return
+	}
+
+	user, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication required"})
+		return
+	}
+
+	userID := user.(*model.User).ID
+	report := &model.Report{
+		Title:        reportDTO.Title,
+		Description:  reportDTO.Description,
+		Location:     reportDTO.Location,
+		ReportedByID: userID,
+	}
+
+	result, err := ctrl.caseService.SubmitCrimeReport(report)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"reportId": result.ID})
+}

@@ -84,3 +84,7 @@ func (r *CaseRepository) AddAssignee(caseID, userID uint) error {
 func (r *CaseRepository) RemoveAssignee(caseID, userID uint) error {
 	return r.db.Model(&model.Case{Model: gorm.Model{ID: caseID}}).Association("Assignees").Delete(&model.User{Model: gorm.Model{ID: userID}})
 }
+
+func (r *CaseRepository) CreateReport(report *model.Report) error {
+	return r.db.Create(report).Error
+}
