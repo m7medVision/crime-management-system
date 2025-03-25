@@ -26,7 +26,7 @@ func main() {
 	}
 
 	// Initialize MinIO client
-	if err := util.InitMinio(); err != nil {
+	if err := util.InitMinio(cfg); err != nil {
 		log.Fatalf("Failed to initialize MinIO: %v", err)
 	}
 

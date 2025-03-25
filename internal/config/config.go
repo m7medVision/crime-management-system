@@ -48,6 +48,16 @@ type EmailConfig struct {
 type StorageConfig struct {
 	Type      string // "local", "s3", "gcs", etc.
 	LocalPath string
+	Minio     MinioConfig
+}
+
+type MinioConfig struct {
+	Endpoint  string
+	AccessKey string
+	SecretKey string
+	UseSSL    bool
+	Bucket    string
+	Region    string
 }
 
 // isDevelopment checks if we're running in development mode
@@ -102,6 +112,14 @@ func LoadConfig() (*Config, error) {
 		Storage: StorageConfig{
 			Type:      getEnv("STORAGE_TYPE", "local"),
 			LocalPath: getEnv("STORAGE_LOCAL_PATH", "./storage"),
+			Minio: MinioConfig{
+				Endpoint:  getEnv("MINIO_ENDPOINT", "minio"),
+				AccessKey: getEnv("MINIO_ACCESS_KEY", "minioadmin"),
+				SecretKey: getEnv("MINIO_SECRET_KEY", "minioadmin"),
+				UseSSL:    getEnvAsBool("MINIO_USE_SSL", false),
+				Bucket:    getEnv("MINIO_BUCKET", "crime-management"),
+				Region:    getEnv("MINIO_REGION", "us-east-1"),
+			},
 		},
 	}
 
@@ -120,6 +138,15 @@ func getEnv(key, defaultValue string) string {
 func getEnvAsInt(key string, defaultValue int) int {
 	valueStr := os.Getenv(key)
 	if value, err := strconv.Atoi(valueStr); err == nil {
+		return value
+	}
+	return defaultValue
+}
+
+// Helper function to get environment variables as boolean
+func getEnvAsBool(key string, defaultValue bool) bool {
+	valueStr := os.Getenv(key)
+	if value, err := strconv.ParseBool(valueStr); err == nil {
 		return value
 	}
 	return defaultValue
