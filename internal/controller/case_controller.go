@@ -216,3 +216,67 @@ func (ctrl *CaseController) SubmitCrimeReport(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"reportId": result.ID})
 }
+
+func (ctrl *CaseController) GetEvidence(c *gin.Context) {
+	caseID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		return
+	}
+
+	evidence, err := ctrl.caseService.GetEvidence(uint(caseID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, evidence)
+}
+
+func (ctrl *CaseController) GetSuspects(c *gin.Context) {
+	caseID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		return
+	}
+
+	suspects, err := ctrl.caseService.GetSuspects(uint(caseID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, suspects)
+}
+
+func (ctrl *CaseController) GetVictims(c *gin.Context) {
+	caseID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		return
+	}
+
+	victims, err := ctrl.caseService.GetVictims(uint(caseID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, victims)
+}
+
+func (ctrl *CaseController) GetWitnesses(c *gin.Context) {
+	caseID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		return
+	}
+
+	witnesses, err := ctrl.caseService.GetWitnesses(uint(caseID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, witnesses)
+}

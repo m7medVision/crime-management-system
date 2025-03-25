@@ -103,3 +103,19 @@ func (s *CaseService) SubmitCrimeReport(report *model.Report) (*model.Report, er
 	}
 	return report, nil
 }
+
+func (s *CaseService) GetEvidence(caseID uint) ([]model.Evidence, error) {
+	return s.caseRepo.GetEvidence(caseID)
+}
+
+func (s *CaseService) GetSuspects(caseID uint) ([]model.Suspect, error) {
+	return s.caseRepo.GetSuspects(caseID)
+}
+
+func (s *CaseService) GetVictims(caseID uint) ([]model.Victim, error) {
+	return s.caseRepo.GetVictims(caseID)
+}
+
+func (s *CaseService) GetWitnesses(caseID uint) ([]model.Witness, error) {
+	return s.caseRepo.GetWitnesses(caseID)
+}

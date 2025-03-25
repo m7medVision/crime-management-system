@@ -88,3 +88,27 @@ func (r *CaseRepository) RemoveAssignee(caseID, userID uint) error {
 func (r *CaseRepository) CreateReport(report *model.Report) error {
 	return r.db.Create(report).Error
 }
+
+func (r *CaseRepository) GetEvidence(caseID uint) ([]model.Evidence, error) {
+	var evidence []model.Evidence
+	err := r.db.Where("case_id = ?", caseID).Find(&evidence).Error
+	return evidence, err
+}
+
+func (r *CaseRepository) GetSuspects(caseID uint) ([]model.Suspect, error) {
+	var suspects []model.Suspect
+	err := r.db.Where("case_id = ?", caseID).Find(&suspects).Error
+	return suspects, err
+}
+
+func (r *CaseRepository) GetVictims(caseID uint) ([]model.Victim, error) {
+	var victims []model.Victim
+	err := r.db.Where("case_id = ?", caseID).Find(&victims).Error
+	return victims, err
+}
+
+func (r *CaseRepository) GetWitnesses(caseID uint) ([]model.Witness, error) {
+	var witnesses []model.Witness
+	err := r.db.Where("case_id = ?", caseID).Find(&witnesses).Error
+	return witnesses, err
+}
