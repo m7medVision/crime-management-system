@@ -25,6 +25,11 @@ func main() {
 		log.Fatalf("Failed to initialize database: %v", err)
 	}
 
+	// Initialize MinIO client
+	if err := util.InitMinio(); err != nil {
+		log.Fatalf("Failed to initialize MinIO: %v", err)
+	}
+
 	// Initialize repositories
 	userRepo := repository.NewUserRepository(db)
 	caseRepo := repository.NewCaseRepository(db)

@@ -42,6 +42,11 @@ services:
       - EMAIL_FROM_NAME=District Core Crime Management
       - STORAGE_TYPE=local
       - STORAGE_LOCAL_PATH=/app/storage
+      - MINIO_ENDPOINT=minio
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_USE_SSL=false
+
     volumes:
       - storage_data:/app/storage
 
