@@ -18,7 +18,19 @@ func NewEvidenceController(evidenceService *service.EvidenceService) *EvidenceCo
 	return &EvidenceController{evidenceService: evidenceService}
 }
 
-// CreateTextEvidence handles the creation of text evidence
+// CreateTextEvidence godoc
+// @Summary Create text evidence
+// @Description Add textual evidence to a case
+// @Tags evidence
+// @Accept json
+// @Produce json
+// @Param evidence body dto.CreateTextEvidenceDTO true "Text evidence details"
+// @Success 201 {object} model.Evidence
+// @Failure 400 {object} map[string]string "Invalid evidence data"
+// @Failure 401 {object} map[string]string "Authentication required"
+// @Failure 500 {object} map[string]string "Server error"
+// @Security ApiKeyAuth
+// @Router /evidence/text [post]
 func (ctrl *EvidenceController) CreateTextEvidence(c *gin.Context) {
 	var evidenceDTO dto.CreateTextEvidenceDTO
 	if err := c.ShouldBindJSON(&evidenceDTO); err != nil {
@@ -47,7 +59,21 @@ func (ctrl *EvidenceController) CreateTextEvidence(c *gin.Context) {
 	c.JSON(http.StatusCreated, evidence)
 }
 
-// CreateImageEvidence handles the upload of image evidence
+// CreateImageEvidence godoc
+// @Summary Upload image evidence
+// @Description Upload an image as evidence for a case
+// @Tags evidence
+// @Accept multipart/form-data
+// @Produce json
+// @Param caseId formData int true "Case ID"
+// @Param remarks formData string false "Optional remarks about the evidence"
+// @Param image formData file true "Image file"
+// @Success 201 {object} model.Evidence
+// @Failure 400 {object} map[string]string "Invalid request or not an image"
+// @Failure 401 {object} map[string]string "Authentication required"
+// @Failure 500 {object} map[string]string "Server error"
+// @Security ApiKeyAuth
+// @Router /evidence/image [post]
 func (ctrl *EvidenceController) CreateImageEvidence(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.PostForm("caseId"))
 	if err != nil {
@@ -78,7 +104,18 @@ func (ctrl *EvidenceController) CreateImageEvidence(c *gin.Context) {
 	c.JSON(http.StatusCreated, evidence)
 }
 
-// GetEvidenceByID retrieves evidence by ID
+// GetEvidenceByID godoc
+// @Summary Get evidence details
+// @Description Retrieve details of a specific evidence item
+// @Tags evidence
+// @Accept json
+// @Produce json
+// @Param id path int true "Evidence ID"
+// @Success 200 {object} model.Evidence
+// @Failure 400 {object} map[string]string "Invalid evidence ID"
+// @Failure 404 {object} map[string]string "Evidence not found"
+// @Security ApiKeyAuth
+// @Router /evidence/{id} [get]
 func (ctrl *EvidenceController) GetEvidenceByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -95,7 +132,18 @@ func (ctrl *EvidenceController) GetEvidenceByID(c *gin.Context) {
 	c.JSON(http.StatusOK, evidence)
 }
 
-// GetEvidenceImage streams the evidence image
+// GetEvidenceImage godoc
+// @Summary Get evidence image
+// @Description Stream an evidence image file
+// @Tags evidence
+// @Accept json
+// @Produce image/*
+// @Param id path int true "Evidence ID"
+// @Success 200 {file} binary "Image file"
+// @Failure 400 {object} map[string]string "Invalid evidence ID"
+// @Failure 500 {object} map[string]string "Server error or not an image"
+// @Security ApiKeyAuth
+// @Router /evidence/{id}/image [get]
 func (ctrl *EvidenceController) GetEvidenceImage(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -119,7 +167,20 @@ func (ctrl *EvidenceController) GetEvidenceImage(c *gin.Context) {
 	c.DataFromReader(http.StatusOK, size, contentType, object, nil)
 }
 
-// UpdateEvidence updates evidence remarks
+// UpdateEvidence godoc
+// @Summary Update evidence
+// @Description Update evidence remarks
+// @Tags evidence
+// @Accept json
+// @Produce json
+// @Param id path int true "Evidence ID"
+// @Param evidence body dto.UpdateEvidenceDTO true "Updated evidence details"
+// @Success 200 {object} model.Evidence
+// @Failure 400 {object} map[string]string "Invalid evidence ID or data"
+// @Failure 401 {object} map[string]string "Authentication required"
+// @Failure 500 {object} map[string]string "Server error"
+// @Security ApiKeyAuth
+// @Router /evidence/{id} [put]
 func (ctrl *EvidenceController) UpdateEvidence(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -149,7 +210,19 @@ func (ctrl *EvidenceController) UpdateEvidence(c *gin.Context) {
 	c.JSON(http.StatusOK, evidence)
 }
 
-// SoftDeleteEvidence soft deletes evidence
+// SoftDeleteEvidence godoc
+// @Summary Soft delete evidence
+// @Description Mark evidence as deleted (soft delete)
+// @Tags evidence
+// @Accept json
+// @Produce json
+// @Param id path int true "Evidence ID"
+// @Success 200 {object} map[string]string "Success message"
+// @Failure 400 {object} map[string]string "Invalid evidence ID"
+// @Failure 401 {object} map[string]string "Authentication required"
+// @Failure 500 {object} map[string]string "Server error"
+// @Security ApiKeyAuth
+// @Router /evidence/{id} [delete]
 func (ctrl *EvidenceController) SoftDeleteEvidence(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -173,7 +246,20 @@ func (ctrl *EvidenceController) SoftDeleteEvidence(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Evidence soft deleted successfully"})
 }
 
-// HardDeleteEvidence permanently deletes evidence with confirmation
+// HardDeleteEvidence godoc
+// @Summary Permanently delete evidence
+// @Description Permanently delete evidence (requires confirmation)
+// @Tags evidence
+// @Accept json
+// @Produce json
+// @Param id path int true "Evidence ID"
+// @Param confirmation body dto.DeleteConfirmationDTO true "Deletion confirmation"
+// @Success 200 {object} map[string]string "Success message"
+// @Failure 400 {object} map[string]string "Invalid evidence ID or missing confirmation"
+// @Failure 401 {object} map[string]string "Authentication required"
+// @Failure 500 {object} map[string]string "Server error"
+// @Security ApiKeyAuth
+// @Router /evidence/{id}/permanent [delete]
 func (ctrl *EvidenceController) HardDeleteEvidence(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -208,7 +294,18 @@ func (ctrl *EvidenceController) HardDeleteEvidence(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Evidence permanently deleted"})
 }
 
-// GetEvidenceAuditLogs retrieves audit logs for evidence
+// GetEvidenceAuditLogs godoc
+// @Summary Get evidence audit logs
+// @Description Retrieve audit logs for a specific evidence item
+// @Tags evidence,audit
+// @Accept json
+// @Produce json
+// @Param id path int true "Evidence ID"
+// @Success 200 {array} model.AuditLog
+// @Failure 400 {object} map[string]string "Invalid evidence ID"
+// @Failure 500 {object} map[string]string "Server error"
+// @Security ApiKeyAuth
+// @Router /evidence/{id}/audit [get]
 func (ctrl *EvidenceController) GetEvidenceAuditLogs(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

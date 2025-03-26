@@ -18,6 +18,18 @@ func NewCaseController(caseService *service.CaseService) *CaseController {
 	return &CaseController{caseService: caseService}
 }
 
+// CreateCase godoc
+// @Summary Create a new case
+// @Description Create a new criminal case record
+// @Tags cases
+// @Accept json
+// @Produce json
+// @Param case body dto.CaseDTO true "Case details"
+// @Success 201 {object} model.Case
+// @Failure 400 {object} map[string]string "Invalid case data"
+// @Failure 403 {object} map[string]string "Permission denied"
+// @Security ApiKeyAuth
+// @Router /cases [post]
 func (ctrl *CaseController) CreateCase(c *gin.Context) {
 	var caseDTO dto.CaseDTO
 	if err := c.ShouldBindJSON(&caseDTO); err != nil {
@@ -51,6 +63,20 @@ func (ctrl *CaseController) CreateCase(c *gin.Context) {
 	c.JSON(http.StatusCreated, result)
 }
 
+// UpdateCase godoc
+// @Summary Update an existing case
+// @Description Update an existing criminal case record
+// @Tags cases
+// @Accept json
+// @Produce json
+// @Param id path int true "Case ID"
+// @Param case body dto.CaseDTO true "Updated case details"
+// @Success 200 {object} model.Case
+// @Failure 400 {object} map[string]string "Invalid case data"
+// @Failure 403 {object} map[string]string "Permission denied"
+// @Failure 404 {object} map[string]string "Case not found"
+// @Security ApiKeyAuth
+// @Router /cases/{id} [put]
 func (ctrl *CaseController) UpdateCase(c *gin.Context) {
 	var caseDTO dto.CaseDTO
 	if err := c.ShouldBindJSON(&caseDTO); err != nil {
@@ -94,6 +120,18 @@ func (ctrl *CaseController) UpdateCase(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
+// GetCaseByID godoc
+// @Summary Get case details
+// @Description Retrieve detailed information about a specific case
+// @Tags cases
+// @Accept json
+// @Produce json
+// @Param id path int true "Case ID"
+// @Success 200 {object} model.Case
+// @Failure 400 {object} map[string]string "Invalid case ID"
+// @Failure 404 {object} map[string]string "Case not found"
+// @Security ApiKeyAuth
+// @Router /cases/{id} [get]
 func (ctrl *CaseController) GetCaseByID(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -110,6 +148,19 @@ func (ctrl *CaseController) GetCaseByID(c *gin.Context) {
 	c.JSON(http.StatusOK, caseData)
 }
 
+// ListCases godoc
+// @Summary List all cases
+// @Description Get a paginated list of cases with optional search
+// @Tags cases
+// @Accept json
+// @Produce json
+// @Param offset query int false "Pagination offset" default(0)
+// @Param limit query int false "Items per page" default(10)
+// @Param search query string false "Search term for case name or description"
+// @Success 200 {object} map[string]interface{} "cases and total count"
+// @Failure 500 {object} map[string]string "Server error"
+// @Security ApiKeyAuth
+// @Router /cases [get]
 func (ctrl *CaseController) ListCases(c *gin.Context) {
 	offset, _ := strconv.Atoi(c.DefaultQuery("offset", "0"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
@@ -127,6 +178,18 @@ func (ctrl *CaseController) ListCases(c *gin.Context) {
 	})
 }
 
+// GetAssignees godoc
+// @Summary Get case assignees
+// @Description Retrieve list of users assigned to a case
+// @Tags cases,assignees
+// @Accept json
+// @Produce json
+// @Param id path int true "Case ID"
+// @Success 200 {array} model.User
+// @Failure 400 {object} map[string]string "Invalid case ID"
+// @Failure 500 {object} map[string]string "Server error"
+// @Security ApiKeyAuth
+// @Router /cases/{id}/assignees [get]
 func (ctrl *CaseController) GetAssignees(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -187,6 +250,17 @@ func (ctrl *CaseController) RemoveAssignee(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Assignee removed successfully"})
 }
 
+// SubmitCrimeReport godoc
+// @Summary Submit a crime report
+// @Description Public endpoint to submit a crime report
+// @Tags public,reports
+// @Accept json
+// @Produce json
+// @Param report body dto.ReportDTO true "Crime report details"
+// @Success 201 {object} map[string]uint "reportId"
+// @Failure 400 {object} map[string]string "Invalid report data"
+// @Failure 500 {object} map[string]string "Server error"
+// @Router /public/reports [post]
 func (ctrl *CaseController) SubmitCrimeReport(c *gin.Context) {
 	var reportDTO dto.ReportDTO
 	if err := c.ShouldBindJSON(&reportDTO); err != nil {
@@ -301,7 +375,18 @@ func (c *CaseController) ExtractLinks(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"links": links})
 }
 
-// GetCaseStatusByReportID returns the case status for a given report ID
+// GetCaseStatusByReportID godoc
+// @Summary Get case status by report ID
+// @Description Public endpoint to check a case status using report ID
+// @Tags public,reports
+// @Accept json
+// @Produce json
+// @Param reportId path string true "Report ID"
+// @Success 200 {object} map[string]string "Report ID and status"
+// @Failure 400 {object} map[string]string "Invalid Report ID"
+// @Failure 404 {object} map[string]string "Report not found"
+// @Failure 500 {object} map[string]string "Server error"
+// @Router /public/reports/{reportId}/status [get]
 func (ctrl *CaseController) GetCaseStatusByReportID(c *gin.Context) {
 	reportID := c.Param("reportId")
 	if reportID == "" {

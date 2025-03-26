@@ -16,7 +16,18 @@ func NewReportController(reportService *service.ReportService) *ReportController
 	return &ReportController{reportService: reportService}
 }
 
-// GenerateCaseReport generates a PDF report for a case
+// GenerateCaseReport godoc
+// @Summary Generate case report
+// @Description Generate a PDF report for a case with all details
+// @Tags reports
+// @Accept json
+// @Produce application/pdf
+// @Param id path int true "Case ID"
+// @Success 200 {file} binary "PDF report file"
+// @Failure 400 {object} map[string]string "Invalid case ID"
+// @Failure 500 {object} map[string]string "Server error"
+// @Security ApiKeyAuth
+// @Router /cases/{id}/report [get]
 func (ctrl *ReportController) GenerateCaseReport(c *gin.Context) {
 	// Parse case ID from URL parameter
 	caseID, err := strconv.Atoi(c.Param("id"))

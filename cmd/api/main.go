@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/m7medVision/crime-management-system/internal/config"
@@ -14,7 +13,23 @@ import (
 	"github.com/m7medVision/crime-management-system/internal/repository"
 	"github.com/m7medVision/crime-management-system/internal/service"
 	"github.com/m7medVision/crime-management-system/internal/util"
+
+	_ "github.com/m7medVision/crime-management-system/docs"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
+
+// @title District Core Crime Management System API
+// @version 1.0
+// @description API service for the District Core Crime Management System
+
+// @host localhost:8080
+// @BasePath /api
+
+// @securityDefinitions.basic BasicAuth
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 
 func main() {
 	// Load configuration
@@ -66,6 +81,9 @@ func main() {
 	// Setup Gin router
 	router := gin.Default()
 
+	// Swagger documentation endpoint
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	// Auth routes
 	router.POST("/login", authController.Login)
 
@@ -106,10 +124,8 @@ func main() {
 
 	// Start server
 	port := cfg.Server.Port
-	if !strings.HasPrefix(port, ":") {
-		port = ":" + port
-	}
-	if err := router.Run(port); err != nil {
+	addr := "0.0.0.0:" + port
+	if err := router.Run(addr); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }

@@ -16,6 +16,17 @@ func NewAuthController(authService *service.AuthService) *AuthController {
 	return &AuthController{authService: authService}
 }
 
+// Login godoc
+// @Summary User login
+// @Description Authenticate user and return JWT token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param credentials body dto.LoginDTO true "Login Credentials"
+// @Success 200 {object} map[string]interface{} "token and user information"
+// @Failure 400 {object} map[string]string "Invalid login request"
+// @Failure 401 {object} map[string]string "Invalid credentials"
+// @Router /login [post]
 func (ctrl *AuthController) Login(c *gin.Context) {
 	var loginDTO dto.LoginDTO
 	if err := c.ShouldBindJSON(&loginDTO); err != nil {

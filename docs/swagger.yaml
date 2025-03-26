@@ -1,0 +1,1098 @@
+basePath: /api
+definitions:
+  github_com_m7medVision_crime-management-system_internal_dto.CaseDTO:
+    properties:
+      area:
+        type: string
+      authorizationLevel:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.ClearanceLevel'
+      caseType:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      reportedById:
+        type: integer
+    required:
+    - area
+    - authorizationLevel
+    - caseType
+    - description
+    - name
+    - reportedById
+    type: object
+  github_com_m7medVision_crime-management-system_internal_dto.CreateTextEvidenceDTO:
+    properties:
+      caseId:
+        type: integer
+      content:
+        type: string
+      remarks:
+        type: string
+    required:
+    - caseId
+    - content
+    type: object
+  github_com_m7medVision_crime-management-system_internal_dto.DeleteConfirmationDTO:
+    properties:
+      confirmation:
+        type: string
+    required:
+    - confirmation
+    type: object
+  github_com_m7medVision_crime-management-system_internal_dto.LoginDTO:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  github_com_m7medVision_crime-management-system_internal_dto.ReportDTO:
+    properties:
+      description:
+        type: string
+      location:
+        type: string
+      title:
+        type: string
+    required:
+    - description
+    - location
+    - title
+    type: object
+  github_com_m7medVision_crime-management-system_internal_dto.UpdateEvidenceDTO:
+    properties:
+      remarks:
+        type: string
+    type: object
+  github_com_m7medVision_crime-management-system_internal_model.ActionType:
+    enum:
+    - create
+    - update
+    - delete
+    type: string
+    x-enum-varnames:
+    - ActionCreate
+    - ActionUpdate
+    - ActionDelete
+  github_com_m7medVision_crime-management-system_internal_model.AuditLog:
+    properties:
+      action:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.ActionType'
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      entityID:
+        type: integer
+      entityType:
+        description: '"evidence", "case", "user", etc.'
+        type: string
+      id:
+        type: integer
+      ipaddress:
+        type: string
+      newValue:
+        type: string
+      oldValue:
+        type: string
+      updatedAt:
+        type: string
+      user:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
+      userID:
+        type: integer
+    type: object
+  github_com_m7medVision_crime-management-system_internal_model.Case:
+    properties:
+      area:
+        description: City/Area
+        type: string
+      assignees:
+        items:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
+        type: array
+      authorizationLevel:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.ClearanceLevel'
+      caseNumber:
+        type: string
+      caseType:
+        type: string
+      createdAt:
+        type: string
+      createdBy:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
+      createdByID:
+        type: integer
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      description:
+        type: string
+      evidence:
+        items:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Evidence'
+        type: array
+      id:
+        type: integer
+      name:
+        type: string
+      reportedBy:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
+      reportedByID:
+        type: integer
+      reports:
+        items:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Report'
+        type: array
+      status:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.CaseStatus'
+      suspects:
+        items:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Suspect'
+        type: array
+      updatedAt:
+        type: string
+      victims:
+        items:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Victim'
+        type: array
+      witnesses:
+        items:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Witness'
+        type: array
+    type: object
+  github_com_m7medVision_crime-management-system_internal_model.CaseStatus:
+    enum:
+    - pending
+    - ongoing
+    - closed
+    type: string
+    x-enum-varnames:
+    - StatusPending
+    - StatusOngoing
+    - StatusClosed
+  github_com_m7medVision_crime-management-system_internal_model.ClearanceLevel:
+    enum:
+    - low
+    - medium
+    - high
+    - critical
+    type: string
+    x-enum-varnames:
+    - ClearanceLow
+    - ClearanceMedium
+    - ClearanceHigh
+    - ClearanceCritical
+  github_com_m7medVision_crime-management-system_internal_model.Evidence:
+    properties:
+      addedBy:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
+      addedByID:
+        type: integer
+      case:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Case'
+      caseID:
+        type: integer
+      content:
+        description: For text evidence
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      imagePath:
+        description: For image evidence
+        type: string
+      isDeleted:
+        description: For soft delete
+        type: boolean
+      remarks:
+        type: string
+      type:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.EvidenceType'
+      updatedAt:
+        type: string
+    type: object
+  github_com_m7medVision_crime-management-system_internal_model.EvidenceType:
+    enum:
+    - text
+    - image
+    type: string
+    x-enum-varnames:
+    - EvidenceTypeText
+    - EvidenceTypeImage
+  github_com_m7medVision_crime-management-system_internal_model.Report:
+    properties:
+      cases:
+        items:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Case'
+        type: array
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      description:
+        type: string
+      id:
+        type: integer
+      location:
+        type: string
+      reportID:
+        type: string
+      reportedBy:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
+      reportedByID:
+        type: integer
+      title:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  github_com_m7medVision_crime-management-system_internal_model.Role:
+    enum:
+    - admin
+    - investigator
+    - officer
+    - citizen
+    type: string
+    x-enum-varnames:
+    - RoleAdmin
+    - RoleInvestigator
+    - RoleOfficer
+    - RoleCitizen
+  github_com_m7medVision_crime-management-system_internal_model.Suspect:
+    properties:
+      addedBy:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
+      addedByID:
+        type: integer
+      address:
+        type: string
+      age:
+        type: integer
+      caseID:
+        type: integer
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      description:
+        type: string
+      firstName:
+        type: string
+      gender:
+        type: string
+      id:
+        type: integer
+      isArrested:
+        type: boolean
+      lastName:
+        type: string
+      notes:
+        type: string
+      phoneNumber:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  github_com_m7medVision_crime-management-system_internal_model.User:
+    properties:
+      clearanceLevel:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.ClearanceLevel'
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      email:
+        type: string
+      fullName:
+        type: string
+      id:
+        type: integer
+      isActive:
+        type: boolean
+      lastLogin:
+        type: string
+      password:
+        type: string
+      role:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Role'
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
+  github_com_m7medVision_crime-management-system_internal_model.Victim:
+    properties:
+      addedBy:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
+      addedByID:
+        type: integer
+      address:
+        type: string
+      age:
+        type: integer
+      caseID:
+        type: integer
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      firstName:
+        type: string
+      gender:
+        type: string
+      id:
+        type: integer
+      injuryDescription:
+        type: string
+      lastName:
+        type: string
+      notes:
+        type: string
+      phoneNumber:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  github_com_m7medVision_crime-management-system_internal_model.Witness:
+    properties:
+      addedBy:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
+      addedByID:
+        type: integer
+      address:
+        type: string
+      age:
+        type: integer
+      caseID:
+        type: integer
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      firstName:
+        type: string
+      gender:
+        type: string
+      id:
+        type: integer
+      lastName:
+        type: string
+      notes:
+        type: string
+      phoneNumber:
+        type: string
+      statement:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API service for the District Core Crime Management System
+  title: District Core Crime Management System API
+  version: "1.0"
+paths:
+  /cases:
+    get:
+      consumes:
+      - application/json
+      description: Get a paginated list of cases with optional search
+      parameters:
+      - default: 0
+        description: Pagination offset
+        in: query
+        name: offset
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Search term for case name or description
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: cases and total count
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: List all cases
+      tags:
+      - cases
+    post:
+      consumes:
+      - application/json
+      description: Create a new criminal case record
+      parameters:
+      - description: Case details
+        in: body
+        name: case
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.CaseDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Case'
+        "400":
+          description: Invalid case data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Permission denied
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new case
+      tags:
+      - cases
+  /cases/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve detailed information about a specific case
+      parameters:
+      - description: Case ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Case'
+        "400":
+          description: Invalid case ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Case not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get case details
+      tags:
+      - cases
+    put:
+      consumes:
+      - application/json
+      description: Update an existing criminal case record
+      parameters:
+      - description: Case ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated case details
+        in: body
+        name: case
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.CaseDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Case'
+        "400":
+          description: Invalid case data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Permission denied
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Case not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Update an existing case
+      tags:
+      - cases
+  /cases/{id}/assignees:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve list of users assigned to a case
+      parameters:
+      - description: Case ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
+            type: array
+        "400":
+          description: Invalid case ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get case assignees
+      tags:
+      - cases
+      - assignees
+  /cases/{id}/report:
+    get:
+      consumes:
+      - application/json
+      description: Generate a PDF report for a case with all details
+      parameters:
+      - description: Case ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/pdf
+      responses:
+        "200":
+          description: PDF report file
+          schema:
+            type: file
+        "400":
+          description: Invalid case ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Generate case report
+      tags:
+      - reports
+  /evidence/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Mark evidence as deleted (soft delete)
+      parameters:
+      - description: Evidence ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success message
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid evidence ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Authentication required
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Soft delete evidence
+      tags:
+      - evidence
+    get:
+      consumes:
+      - application/json
+      description: Retrieve details of a specific evidence item
+      parameters:
+      - description: Evidence ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Evidence'
+        "400":
+          description: Invalid evidence ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Evidence not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get evidence details
+      tags:
+      - evidence
+    put:
+      consumes:
+      - application/json
+      description: Update evidence remarks
+      parameters:
+      - description: Evidence ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated evidence details
+        in: body
+        name: evidence
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.UpdateEvidenceDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Evidence'
+        "400":
+          description: Invalid evidence ID or data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Authentication required
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Update evidence
+      tags:
+      - evidence
+  /evidence/{id}/audit:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve audit logs for a specific evidence item
+      parameters:
+      - description: Evidence ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.AuditLog'
+            type: array
+        "400":
+          description: Invalid evidence ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get evidence audit logs
+      tags:
+      - evidence
+      - audit
+  /evidence/{id}/image:
+    get:
+      consumes:
+      - application/json
+      description: Stream an evidence image file
+      parameters:
+      - description: Evidence ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - image/*
+      responses:
+        "200":
+          description: Image file
+          schema:
+            type: file
+        "400":
+          description: Invalid evidence ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Server error or not an image
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get evidence image
+      tags:
+      - evidence
+  /evidence/{id}/permanent:
+    delete:
+      consumes:
+      - application/json
+      description: Permanently delete evidence (requires confirmation)
+      parameters:
+      - description: Evidence ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Deletion confirmation
+        in: body
+        name: confirmation
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.DeleteConfirmationDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success message
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid evidence ID or missing confirmation
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Authentication required
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Permanently delete evidence
+      tags:
+      - evidence
+  /evidence/image:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload an image as evidence for a case
+      parameters:
+      - description: Case ID
+        in: formData
+        name: caseId
+        required: true
+        type: integer
+      - description: Optional remarks about the evidence
+        in: formData
+        name: remarks
+        type: string
+      - description: Image file
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Evidence'
+        "400":
+          description: Invalid request or not an image
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Authentication required
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Upload image evidence
+      tags:
+      - evidence
+  /evidence/text:
+    post:
+      consumes:
+      - application/json
+      description: Add textual evidence to a case
+      parameters:
+      - description: Text evidence details
+        in: body
+        name: evidence
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.CreateTextEvidenceDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Evidence'
+        "400":
+          description: Invalid evidence data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Authentication required
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Create text evidence
+      tags:
+      - evidence
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT token
+      parameters:
+      - description: Login Credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.LoginDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token and user information
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid login request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Invalid credentials
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: User login
+      tags:
+      - auth
+  /public/reports:
+    post:
+      consumes:
+      - application/json
+      description: Public endpoint to submit a crime report
+      parameters:
+      - description: Crime report details
+        in: body
+        name: report
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ReportDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: reportId
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Invalid report data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Submit a crime report
+      tags:
+      - public
+      - reports
+  /public/reports/{reportId}/status:
+    get:
+      consumes:
+      - application/json
+      description: Public endpoint to check a case status using report ID
+      parameters:
+      - description: Report ID
+        in: path
+        name: reportId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Report ID and status
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid Report ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Report not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get case status by report ID
+      tags:
+      - public
+      - reports
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+  BasicAuth:
+    type: basic
+swagger: "2.0"
