@@ -64,6 +64,7 @@ func main() {
 	authService := service.NewAuthService(userRepo, cfg.Auth.Secret, cfg.Auth.ExpiryTime)
 	caseService := service.NewCaseService(caseRepo, userRepo)
 	evidenceService := service.NewEvidenceService(evidenceRepo, caseRepo, userRepo, cfg.Storage.Minio.Bucket)
+	userService := service.NewUserService(userRepo)
 
 	// Initialize report service
 	templatePath := filepath.Join("templates", "case_report.tex")
@@ -77,6 +78,7 @@ func main() {
 	caseController := controller.NewCaseController(caseService)
 	evidenceController := controller.NewEvidenceController(evidenceService)
 	reportController := controller.NewReportController(reportService)
+	userController := controller.NewUserController(userService)
 
 	// Setup Gin router
 	router := gin.Default()
@@ -96,6 +98,17 @@ func main() {
 	protected := router.Group("/api")
 	protected.Use(middleware.BasicAuth(db))
 	{
+		// User management routes (admin only)
+		userRoutes := protected.Group("/users")
+		userRoutes.Use(middleware.RequireRole(model.RoleAdmin))
+		{
+			userRoutes.POST("", userController.CreateUser)
+			userRoutes.GET("", userController.ListUsers)
+			userRoutes.GET("/:id", userController.GetUser)
+			userRoutes.PUT("/:id", userController.UpdateUser)
+			userRoutes.DELETE("/:id", userController.DeleteUser)
+		}
+
 		// Case routes
 		protected.POST("/cases", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), caseController.CreateCase)
 		protected.PUT("/cases/:id", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), caseController.UpdateCase)
