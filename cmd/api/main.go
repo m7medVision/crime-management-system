@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/m7medVision/crime-management-system/internal/config"
@@ -104,7 +105,11 @@ func main() {
 	}
 
 	// Start server
-	if err := router.Run(":" + cfg.Server.Port); err != nil {
+	port := cfg.Server.Port
+	if !strings.HasPrefix(port, ":") {
+		port = ":" + port
+	}
+	if err := router.Run(port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }

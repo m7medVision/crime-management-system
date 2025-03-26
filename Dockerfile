@@ -4,17 +4,11 @@ FROM golang:1.24-alpine
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
-# Install required packages for PDF generation
-RUN apk add --no-cache texlive texlive-xetex fontconfig msttcorefonts-installer
+# Install required packages for PDF generation and debugging tools
+RUN apk add --no-cache texlive texlive-xetex fontconfig msttcorefonts-installer curl
 
 # Install Microsoft TrueType fonts
 RUN update-ms-fonts && fc-cache -f
-
-# Install Roboto font
-RUN apk add --no-cache wget unzip \
-    && wget https://fonts.google.com/download?family=Roboto -O roboto.zip \
-    && unzip roboto.zip -d /usr/share/fonts/truetype/ \
-    && fc-cache -f
 
 # Copy go mod and sum files
 COPY go.mod go.sum ./
