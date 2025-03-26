@@ -3,6 +3,7 @@ package util
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/m7medVision/crime-management-system/internal/config"
 	"github.com/minio/minio-go/v7"
@@ -13,7 +14,15 @@ var minioClient *minio.Client
 
 // InitMinio initializes the MinIO client
 func InitMinio(cfg *config.Config) error {
-	client, err := minio.New(cfg.Storage.Minio.Endpoint, &minio.Options{
+	endpoint := cfg.Storage.Minio.Endpoint
+	
+	// If no port is specified and we're not using a URL with http/https prefix,
+	// append the default MinIO port (9000)
+	if !strings.Contains(endpoint, ":") && !strings.HasPrefix(endpoint, "http") {
+		endpoint = endpoint + ":9000"
+	}
+	
+	client, err := minio.New(endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(cfg.Storage.Minio.AccessKey, cfg.Storage.Minio.SecretKey, ""),
 		Secure: cfg.Storage.Minio.UseSSL,
 	})
