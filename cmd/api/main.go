@@ -7,6 +7,7 @@ import (
 	"github.com/m7medVision/crime-management-system/internal/config"
 	"github.com/m7medVision/crime-management-system/internal/controller"
 	"github.com/m7medVision/crime-management-system/internal/middleware"
+	"github.com/m7medVision/crime-management-system/internal/model"
 	"github.com/m7medVision/crime-management-system/internal/repository"
 	"github.com/m7medVision/crime-management-system/internal/service"
 	"github.com/m7medVision/crime-management-system/internal/util"
@@ -33,14 +34,17 @@ func main() {
 	// Initialize repositories
 	userRepo := repository.NewUserRepository(db)
 	caseRepo := repository.NewCaseRepository(db)
+	evidenceRepo := repository.NewEvidenceRepository(db)
 
 	// Initialize services
 	authService := service.NewAuthService(userRepo, cfg.Auth.Secret, cfg.Auth.ExpiryTime)
 	caseService := service.NewCaseService(caseRepo, userRepo)
+	evidenceService := service.NewEvidenceService(evidenceRepo, caseRepo, userRepo, cfg.Storage.Minio.Bucket)
 
 	// Initialize controllers
 	authController := controller.NewAuthController(authService)
 	caseController := controller.NewCaseController(caseService)
+	evidenceController := controller.NewEvidenceController(evidenceService)
 
 	// Setup Gin router
 	router := gin.Default()
@@ -48,22 +52,37 @@ func main() {
 	// Auth routes
 	router.POST("/login", authController.Login)
 
+	// Public routes
+	router.POST("/reports", caseController.SubmitCrimeReport)
+
 	// Protected routes
-	protected := router.Group("/")
+	protected := router.Group("/api")
 	protected.Use(middleware.BasicAuth(db))
 	{
-		protected.POST("/cases", caseController.CreateCase)
-		protected.PUT("/cases/:id", caseController.UpdateCase)
+		// Case routes
+		protected.POST("/cases", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), caseController.CreateCase)
+		protected.PUT("/cases/:id", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), caseController.UpdateCase)
 		protected.GET("/cases/:id", caseController.GetCaseByID)
 		protected.GET("/cases", caseController.ListCases)
 
 		protected.GET("/cases/:id/assignees", caseController.GetAssignees)
-		protected.POST("/cases/:id/assignees", caseController.AddAssignee)
-		protected.DELETE("/cases/:id/assignees", caseController.RemoveAssignee)
+		protected.POST("/cases/:id/assignees", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), caseController.AddAssignee)
+		protected.DELETE("/cases/:id/assignees", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), caseController.RemoveAssignee)
+
+		// Evidence routes
+		protected.POST("/evidence/text", evidenceController.CreateTextEvidence)
+		protected.POST("/evidence/image", evidenceController.CreateImageEvidence)
+		protected.GET("/evidence/:id", evidenceController.GetEvidenceByID)
+		protected.GET("/evidence/:id/image", evidenceController.GetEvidenceImage)
+		protected.PUT("/evidence/:id", evidenceController.UpdateEvidence)
+		protected.DELETE("/evidence/:id", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), evidenceController.SoftDeleteEvidence)
+		protected.DELETE("/evidence/:id/permanent", middleware.RequireRole(model.RoleAdmin), evidenceController.HardDeleteEvidence)
+		protected.GET("/evidence/:id/audit", middleware.RequireRole(model.RoleAdmin), evidenceController.GetEvidenceAuditLogs)
+		protected.GET("/cases/:id/evidence", caseController.GetEvidence)
 	}
 
 	// Start server
-	if err := router.Run(cfg.Server.Port); err != nil {
+	if err := router.Run(":" + cfg.Server.Port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
