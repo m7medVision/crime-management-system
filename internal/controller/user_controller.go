@@ -27,21 +27,27 @@ func NewUserController(userService *service.UserService) *UserController {
 // @Produce json
 // @Param user body dto.UserDTO true "User details"
 // @Success 201 {object} model.User
-// @Failure 400 {object} map[string]string "Invalid user data"
-// @Failure 403 {object} map[string]string "Permission denied"
+// @Failure 400 {object} dto.ErrorDTO "Invalid user data"
+// @Failure 403 {object} dto.ErrorDTO "Permission denied"
 // @Security ApiKeyAuth
 // @Router /users [post]
 func (ctrl *UserController) CreateUser(c *gin.Context) {
 	var userDTO dto.UserDTO
 	if err := c.ShouldBindJSON(&userDTO); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	// Hash the password if provided
 	hashedPassword, err := auth.HashPassword(userDTO.Password)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to process password"})
+		c.JSON(http.StatusInternalServerError, dto.ErrorDTO{
+			Message: "Failed to process password",
+			Code:    http.StatusInternalServerError,
+		})
 		return
 	}
 
@@ -57,7 +63,10 @@ func (ctrl *UserController) CreateUser(c *gin.Context) {
 
 	result, err := ctrl.userService.CreateUser(user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
@@ -75,28 +84,37 @@ func (ctrl *UserController) CreateUser(c *gin.Context) {
 // @Param id path int true "User ID"
 // @Param user body dto.UpdateUserDTO true "Updated user details"
 // @Success 200 {object} model.User
-// @Failure 400 {object} map[string]string "Invalid user data"
-// @Failure 403 {object} map[string]string "Permission denied"
-// @Failure 404 {object} map[string]string "User not found"
+// @Failure 400 {object} dto.ErrorDTO "Invalid user data"
+// @Failure 403 {object} dto.ErrorDTO "Permission denied"
+// @Failure 404 {object} dto.ErrorDTO "User not found"
 // @Security ApiKeyAuth
 // @Router /users/{id} [put]
 func (ctrl *UserController) UpdateUser(c *gin.Context) {
 	userID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid user ID",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	var updateDTO dto.UpdateUserDTO
 	if err := c.ShouldBindJSON(&updateDTO); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	// Get existing user
 	existingUser, err := ctrl.userService.GetUserByID(uint(userID))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		c.JSON(http.StatusNotFound, dto.ErrorDTO{
+			Message: "User not found",
+			Code:    http.StatusNotFound,
+		})
 		return
 	}
 
@@ -110,7 +128,10 @@ func (ctrl *UserController) UpdateUser(c *gin.Context) {
 	if updateDTO.Password != "" {
 		hashedPassword, err := auth.HashPassword(updateDTO.Password)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to process password"})
+			c.JSON(http.StatusInternalServerError, dto.ErrorDTO{
+				Message: "Failed to process password",
+				Code:    http.StatusInternalServerError,
+			})
 			return
 		}
 		existingUser.Password = hashedPassword
@@ -127,7 +148,10 @@ func (ctrl *UserController) UpdateUser(c *gin.Context) {
 
 	result, err := ctrl.userService.UpdateUser(existingUser)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
@@ -144,20 +168,26 @@ func (ctrl *UserController) UpdateUser(c *gin.Context) {
 // @Produce json
 // @Param id path int true "User ID"
 // @Success 200 {object} map[string]string "Success message"
-// @Failure 400 {object} map[string]string "Invalid user ID"
-// @Failure 403 {object} map[string]string "Permission denied"
-// @Failure 404 {object} map[string]string "User not found"
+// @Failure 400 {object} dto.ErrorDTO "Invalid user ID"
+// @Failure 403 {object} dto.ErrorDTO "Permission denied"
+// @Failure 404 {object} dto.ErrorDTO "User not found"
 // @Security ApiKeyAuth
 // @Router /users/{id} [delete]
 func (ctrl *UserController) DeleteUser(c *gin.Context) {
 	userID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid user ID",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	if err := ctrl.userService.DeleteUser(uint(userID)); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		c.JSON(http.StatusNotFound, dto.ErrorDTO{
+			Message: "User not found",
+			Code:    http.StatusNotFound,
+		})
 		return
 	}
 
@@ -173,7 +203,7 @@ func (ctrl *UserController) DeleteUser(c *gin.Context) {
 // @Param offset query int false "Pagination offset" default(0)
 // @Param limit query int false "Items per page" default(10)
 // @Success 200 {object} map[string]interface{} "users and total count"
-// @Failure 403 {object} map[string]string "Permission denied"
+// @Failure 403 {object} dto.ErrorDTO "Permission denied"
 // @Security ApiKeyAuth
 // @Router /users [get]
 func (ctrl *UserController) ListUsers(c *gin.Context) {
@@ -182,7 +212,10 @@ func (ctrl *UserController) ListUsers(c *gin.Context) {
 
 	users, total, err := ctrl.userService.ListUsers(offset, limit)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusInternalServerError,
+		})
 		return
 	}
 
@@ -205,21 +238,27 @@ func (ctrl *UserController) ListUsers(c *gin.Context) {
 // @Produce json
 // @Param id path int true "User ID"
 // @Success 200 {object} model.User
-// @Failure 400 {object} map[string]string "Invalid user ID"
-// @Failure 403 {object} map[string]string "Permission denied"
-// @Failure 404 {object} map[string]string "User not found"
+// @Failure 400 {object} dto.ErrorDTO "Invalid user ID"
+// @Failure 403 {object} dto.ErrorDTO "Permission denied"
+// @Failure 404 {object} dto.ErrorDTO "User not found"
 // @Security ApiKeyAuth
 // @Router /users/{id} [get]
 func (ctrl *UserController) GetUser(c *gin.Context) {
 	userID, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid user ID",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	user, err := ctrl.userService.GetUserByID(uint(userID))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		c.JSON(http.StatusNotFound, dto.ErrorDTO{
+			Message: "User not found",
+			Code:    http.StatusNotFound,
+		})
 		return
 	}
 
