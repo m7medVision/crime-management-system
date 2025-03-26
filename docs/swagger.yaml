@@ -69,6 +69,64 @@ definitions:
       remarks:
         type: string
     type: object
+  github_com_m7medVision_crime-management-system_internal_dto.UpdateUserDTO:
+    properties:
+      clearanceLevel:
+        enum:
+        - low
+        - medium
+        - high
+        - critical
+        type: string
+      email:
+        type: string
+      fullName:
+        type: string
+      isActive:
+        type: boolean
+      password:
+        type: string
+      role:
+        enum:
+        - admin
+        - investigator
+        - officer
+        - citizen
+        type: string
+    type: object
+  github_com_m7medVision_crime-management-system_internal_dto.UserDTO:
+    properties:
+      clearanceLevel:
+        enum:
+        - low
+        - medium
+        - high
+        - critical
+        type: string
+      email:
+        type: string
+      fullName:
+        type: string
+      isActive:
+        type: boolean
+      password:
+        type: string
+      role:
+        enum:
+        - admin
+        - investigator
+        - officer
+        - citizen
+        type: string
+      username:
+        type: string
+    required:
+    - clearanceLevel
+    - email
+    - fullName
+    - role
+    - username
+    type: object
   github_com_m7medVision_crime-management-system_internal_model.ActionType:
     enum:
     - create
@@ -1088,6 +1146,205 @@ paths:
       tags:
       - public
       - reports
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Admin endpoint to get a paginated list of users
+      parameters:
+      - default: 0
+        description: Pagination offset
+        in: query
+        name: offset
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: users and total count
+          schema:
+            additionalProperties: true
+            type: object
+        "403":
+          description: Permission denied
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: List all users
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Admin endpoint to create a new user with specified role and clearance
+      parameters:
+      - description: User details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.UserDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
+        "400":
+          description: Invalid user data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Permission denied
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new user
+      tags:
+      - users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Admin endpoint to delete a user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success message
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid user ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Permission denied
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: User not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a user
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Admin endpoint to get details of a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
+        "400":
+          description: Invalid user ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Permission denied
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: User not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get user details
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Admin endpoint to update user details including role and clearance
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated user details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.UpdateUserDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
+        "400":
+          description: Invalid user data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Permission denied
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: User not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Update an existing user
+      tags:
+      - users
 securityDefinitions:
   ApiKeyAuth:
     in: header
