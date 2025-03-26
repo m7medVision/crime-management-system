@@ -1,0 +1,46 @@
+package controller
+
+import (
+	"net/http"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/m7medVision/crime-management-system/internal/service"
+)
+
+type ReportController struct {
+	reportService *service.ReportService
+}
+
+func NewReportController(reportService *service.ReportService) *ReportController {
+	return &ReportController{reportService: reportService}
+}
+
+// GenerateCaseReport generates a PDF report for a case
+func (ctrl *ReportController) GenerateCaseReport(c *gin.Context) {
+	// Parse case ID from URL parameter
+	caseID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		return
+	}
+
+	// Generate the PDF report
+	pdf, err := ctrl.reportService.GenerateCaseReport(uint(caseID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Set headers for PDF download
+	fileName := "case_report_" + strconv.Itoa(caseID) + ".pdf"
+	c.Header("Content-Description", "File Transfer")
+	c.Header("Content-Disposition", "attachment; filename="+fileName)
+	c.Header("Content-Type", "application/pdf")
+	c.Header("Content-Length", strconv.Itoa(len(pdf)))
+	c.Header("Content-Transfer-Encoding", "binary")
+	c.Header("Cache-Control", "no-cache")
+
+	// Write PDF data to response
+	c.Data(http.StatusOK, "application/pdf", pdf)
+}

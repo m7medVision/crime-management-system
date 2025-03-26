@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/m7medVision/crime-management-system/internal/config"
@@ -31,6 +33,12 @@ func main() {
 		log.Fatalf("Failed to initialize MinIO: %v", err)
 	}
 
+	// Ensure temp directory exists
+	tmpDir := "./tmp"
+	if err := os.MkdirAll(tmpDir, 0755); err != nil {
+		log.Fatalf("Failed to create temp directory: %v", err)
+	}
+
 	// Initialize repositories
 	userRepo := repository.NewUserRepository(db)
 	caseRepo := repository.NewCaseRepository(db)
@@ -41,10 +49,18 @@ func main() {
 	caseService := service.NewCaseService(caseRepo, userRepo)
 	evidenceService := service.NewEvidenceService(evidenceRepo, caseRepo, userRepo, cfg.Storage.Minio.Bucket)
 
+	// Initialize report service
+	templatePath := filepath.Join("templates", "case_report.tex")
+	reportService, err := service.NewReportService(caseRepo, templatePath)
+	if err != nil {
+		log.Fatalf("Failed to initialize report service: %v", err)
+	}
+
 	// Initialize controllers
 	authController := controller.NewAuthController(authService)
 	caseController := controller.NewCaseController(caseService)
 	evidenceController := controller.NewEvidenceController(evidenceService)
+	reportController := controller.NewReportController(reportService)
 
 	// Setup Gin router
 	router := gin.Default()
@@ -80,6 +96,9 @@ func main() {
 		protected.GET("/evidence/:id/audit", middleware.RequireRole(model.RoleAdmin), evidenceController.GetEvidenceAuditLogs)
 		protected.GET("/cases/:id/evidence", caseController.GetEvidence)
 		protected.GET("/cases/:id/links", caseController.ExtractLinks)
+
+		// Report routes
+		protected.GET("/cases/:id/report", reportController.GenerateCaseReport)
 	}
 
 	// Start server

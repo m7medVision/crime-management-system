@@ -61,7 +61,7 @@
 
 - [ ] Develop API to return admin logs for evidence-related actions.
   - [ ] Include details on who added, updated, or deleted evidence and when.
-- [ ] Develop API to return a generated report as a PDF with all case details and evidence.
+- [x] Develop API to return a generated report as a PDF with all case details and evidence.
 
 ## Bonus Challenges
 
