@@ -33,13 +33,19 @@ func NewCaseController(caseService *service.CaseService) *CaseController {
 func (ctrl *CaseController) CreateCase(c *gin.Context) {
 	var caseDTO dto.CaseDTO
 	if err := c.ShouldBindJSON(&caseDTO); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case data"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid case data",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	user, exists := c.Get("user")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication required"})
+		c.JSON(http.StatusUnauthorized, dto.ErrorDTO{
+			Message: "Authentication required",
+			Code:    http.StatusUnauthorized,
+		})
 		return
 	}
 
@@ -56,7 +62,10 @@ func (ctrl *CaseController) CreateCase(c *gin.Context) {
 
 	result, err := ctrl.caseService.CreateCase(caseData)
 	if err != nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
+		c.JSON(http.StatusForbidden, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusForbidden,
+		})
 		return
 	}
 
@@ -80,26 +89,39 @@ func (ctrl *CaseController) CreateCase(c *gin.Context) {
 func (ctrl *CaseController) UpdateCase(c *gin.Context) {
 	var caseDTO dto.CaseDTO
 	if err := c.ShouldBindJSON(&caseDTO); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case data"})
+		c.JSON(http.StatusBadRequest,
+			dto.ErrorDTO{
+				Message: "Invalid case data",
+				Code:    http.StatusBadRequest,
+			})
 		return
 	}
 
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid case ID",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	user, exists := c.Get("user")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication required"})
+		c.JSON(http.StatusUnauthorized, dto.ErrorDTO{
+			Message: "Authentication required",
+			Code:    http.StatusUnauthorized,
+		})
 		return
 	}
 
 	userID := user.(*model.User).ID
 	caseData, err := ctrl.caseService.GetCaseByID(uint(caseID))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Case not found"})
+		c.JSON(http.StatusNotFound, dto.ErrorDTO{
+			Message: "Case not found",
+			Code:    http.StatusNotFound,
+		})
 		return
 	}
 
@@ -113,7 +135,10 @@ func (ctrl *CaseController) UpdateCase(c *gin.Context) {
 
 	result, err := ctrl.caseService.UpdateCase(caseData)
 	if err != nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
+		c.JSON(http.StatusForbidden, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusForbidden,
+		})
 		return
 	}
 
@@ -135,13 +160,19 @@ func (ctrl *CaseController) UpdateCase(c *gin.Context) {
 func (ctrl *CaseController) GetCaseByID(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid case ID",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	caseData, err := ctrl.caseService.GetCaseByID(uint(caseID))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Case not found"})
+		c.JSON(http.StatusNotFound, dto.ErrorDTO{
+			Message: "Case not found",
+			Code:    http.StatusNotFound,
+		})
 		return
 	}
 
@@ -168,7 +199,10 @@ func (ctrl *CaseController) ListCases(c *gin.Context) {
 
 	cases, total, err := ctrl.caseService.ListCases(offset, limit, search)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusInternalServerError,
+		})
 		return
 	}
 
@@ -193,13 +227,19 @@ func (ctrl *CaseController) ListCases(c *gin.Context) {
 func (ctrl *CaseController) GetAssignees(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid case ID",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	assignees, err := ctrl.caseService.GetAssignees(uint(caseID))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusInternalServerError,
+		})
 		return
 	}
 
@@ -209,19 +249,28 @@ func (ctrl *CaseController) GetAssignees(c *gin.Context) {
 func (ctrl *CaseController) AddAssignee(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid case ID",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	var assigneeDTO dto.AssigneeDTO
 	if err := c.ShouldBindJSON(&assigneeDTO); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid assignee data"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid assignee data",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	err = ctrl.caseService.AddAssignee(uint(caseID), assigneeDTO.UserID)
 	if err != nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
+		c.JSON(http.StatusForbidden, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusForbidden,
+		})
 		return
 	}
 
@@ -231,19 +280,28 @@ func (ctrl *CaseController) AddAssignee(c *gin.Context) {
 func (ctrl *CaseController) RemoveAssignee(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid case ID",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	var assigneeDTO dto.AssigneeDTO
 	if err := c.ShouldBindJSON(&assigneeDTO); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid assignee data"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid assignee data",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	err = ctrl.caseService.RemoveAssignee(uint(caseID), assigneeDTO.UserID)
 	if err != nil {
-		c.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
+		c.JSON(http.StatusForbidden, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusForbidden,
+		})
 		return
 	}
 
@@ -264,13 +322,19 @@ func (ctrl *CaseController) RemoveAssignee(c *gin.Context) {
 func (ctrl *CaseController) SubmitCrimeReport(c *gin.Context) {
 	var reportDTO dto.ReportDTO
 	if err := c.ShouldBindJSON(&reportDTO); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid report data"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid report data",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	user, exists := c.Get("user")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication required"})
+		c.JSON(http.StatusUnauthorized, dto.ErrorDTO{
+			Message: "Authentication required",
+			Code:    http.StatusUnauthorized,
+		})
 		return
 	}
 
@@ -284,7 +348,10 @@ func (ctrl *CaseController) SubmitCrimeReport(c *gin.Context) {
 
 	result, err := ctrl.caseService.SubmitCrimeReport(report)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusInternalServerError,
+		})
 		return
 	}
 
@@ -294,13 +361,19 @@ func (ctrl *CaseController) SubmitCrimeReport(c *gin.Context) {
 func (ctrl *CaseController) GetEvidence(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid case ID",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	evidence, err := ctrl.caseService.GetEvidence(uint(caseID))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusInternalServerError,
+		})
 		return
 	}
 
@@ -310,13 +383,19 @@ func (ctrl *CaseController) GetEvidence(c *gin.Context) {
 func (ctrl *CaseController) GetSuspects(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid case ID",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	suspects, err := ctrl.caseService.GetSuspects(uint(caseID))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusInternalServerError,
+		})
 		return
 	}
 
@@ -326,13 +405,19 @@ func (ctrl *CaseController) GetSuspects(c *gin.Context) {
 func (ctrl *CaseController) GetVictims(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid case ID",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	victims, err := ctrl.caseService.GetVictims(uint(caseID))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusInternalServerError,
+		})
 		return
 	}
 
@@ -342,13 +427,19 @@ func (ctrl *CaseController) GetVictims(c *gin.Context) {
 func (ctrl *CaseController) GetWitnesses(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid case ID",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	witnesses, err := ctrl.caseService.GetWitnesses(uint(caseID))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusInternalServerError,
+		})
 		return
 	}
 
@@ -360,14 +451,20 @@ func (c *CaseController) ExtractLinks(ctx *gin.Context) {
 	caseIDStr := ctx.Param("id")
 	caseID, err := strconv.ParseUint(caseIDStr, 10, 64)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		ctx.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid case ID",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	// Call service to extract links
 	links, err := c.caseService.ExtractLinksFromCase(uint(caseID))
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusInternalServerError,
+		})
 		return
 	}
 
@@ -390,17 +487,26 @@ func (c *CaseController) ExtractLinks(ctx *gin.Context) {
 func (ctrl *CaseController) GetCaseStatusByReportID(c *gin.Context) {
 	reportID := c.Param("reportId")
 	if reportID == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Report ID is required"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Report ID is required",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	status, err := ctrl.caseService.GetCaseStatusByReportID(reportID)
 	if err != nil {
 		if err.Error() == "report not found" {
-			c.JSON(http.StatusNotFound, gin.H{"error": "Report not found"})
+			c.JSON(http.StatusNotFound, dto.ErrorDTO{
+				Message: "Report not found",
+				Code:    http.StatusNotFound,
+			})
 			return
 		}
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusInternalServerError,
+		})
 		return
 	}
 
