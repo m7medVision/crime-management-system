@@ -329,21 +329,14 @@ func (ctrl *CaseController) SubmitCrimeReport(c *gin.Context) {
 		return
 	}
 
-	user, exists := c.Get("user")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, dto.ErrorDTO{
-			Message: "Authentication required",
-			Code:    http.StatusUnauthorized,
-		})
-		return
-	}
-
-	userID := user.(*model.User).ID
 	report := &model.Report{
 		Title:        reportDTO.Title,
 		Description:  reportDTO.Description,
 		Location:     reportDTO.Location,
-		ReportedByID: userID,
+		CivilID:      reportDTO.CivilID,
+		Email:        reportDTO.Email,
+		Name:         reportDTO.Name,
+		ReportStatus: string(model.ReportStatusPending),
 	}
 
 	result, err := ctrl.caseService.SubmitCrimeReport(report)
