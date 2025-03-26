@@ -119,3 +119,7 @@ func (s *CaseService) GetVictims(caseID uint) ([]model.Victim, error) {
 func (s *CaseService) GetWitnesses(caseID uint) ([]model.Witness, error) {
 	return s.caseRepo.GetWitnesses(caseID)
 }
+
+func (s *CaseService) ExtractLinksFromCase(caseID uint) ([]string, error) {
+	return s.caseRepo.ExtractLinks(caseID)
+}

@@ -79,6 +79,7 @@ func main() {
 		protected.DELETE("/evidence/:id/permanent", middleware.RequireRole(model.RoleAdmin), evidenceController.HardDeleteEvidence)
 		protected.GET("/evidence/:id/audit", middleware.RequireRole(model.RoleAdmin), evidenceController.GetEvidenceAuditLogs)
 		protected.GET("/cases/:id/evidence", caseController.GetEvidence)
+		protected.GET("/cases/:id/links", caseController.ExtractLinks)
 	}
 
 	// Start server

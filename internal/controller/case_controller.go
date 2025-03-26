@@ -280,3 +280,23 @@ func (ctrl *CaseController) GetWitnesses(c *gin.Context) {
 
 	c.JSON(http.StatusOK, witnesses)
 }
+
+func (c *CaseController) ExtractLinks(ctx *gin.Context) {
+	// Parse case ID from URL parameter
+	caseIDStr := ctx.Param("id")
+	caseID, err := strconv.ParseUint(caseIDStr, 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		return
+	}
+
+	// Call service to extract links
+	links, err := c.caseService.ExtractLinksFromCase(uint(caseID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Return the extracted links
+	ctx.JSON(http.StatusOK, gin.H{"links": links})
+}

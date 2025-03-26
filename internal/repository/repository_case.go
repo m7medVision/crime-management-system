@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"regexp"
 
 	"github.com/m7medVision/crime-management-system/internal/model"
 	"gorm.io/gorm"
@@ -111,4 +112,20 @@ func (r *CaseRepository) GetWitnesses(caseID uint) ([]model.Witness, error) {
 	var witnesses []model.Witness
 	err := r.db.Where("case_id = ?", caseID).Find(&witnesses).Error
 	return witnesses, err
+}
+
+func (r *CaseRepository) ExtractLinks(caseID uint) ([]string, error) {
+	var cas model.Case
+	err := r.db.First(&cas, caseID).Error
+	if err != nil {
+		return nil, err
+	}
+
+	// Regular expression pattern for URLs
+	regex := regexp.MustCompile(`https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+[^\s]*`)
+
+	// Find all matches in the case description
+	links := regex.FindAllString(cas.Description, -1)
+
+	return links, nil
 }
