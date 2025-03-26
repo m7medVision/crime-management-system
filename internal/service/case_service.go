@@ -123,3 +123,11 @@ func (s *CaseService) GetWitnesses(caseID uint) ([]model.Witness, error) {
 func (s *CaseService) ExtractLinksFromCase(caseID uint) ([]string, error) {
 	return s.caseRepo.ExtractLinks(caseID)
 }
+
+func (s *CaseService) GetCaseStatusByReportID(reportID string) (model.CaseStatus, error) {
+	status, err := s.caseRepo.GetStatusByReportID(reportID)
+	if err != nil {
+		return "", err
+	}
+	return status, nil
+}

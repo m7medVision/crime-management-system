@@ -129,3 +129,30 @@ func (r *CaseRepository) ExtractLinks(caseID uint) ([]string, error) {
 
 	return links, nil
 }
+
+func (r *CaseRepository) GetStatusByReportID(reportID string) (model.CaseStatus, error) {
+	var report model.Report
+	err := r.db.Where("report_id = ?", reportID).First(&report).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return "", errors.New("report not found")
+		}
+		return "", err
+	}
+
+	var caseStatus model.CaseStatus
+	err = r.db.Model(&model.Case{}).
+		Joins("JOIN case_reports ON cases.id = case_reports.case_id").
+		Where("case_reports.report_id = ?", report.ID).
+		Select("cases.status").
+		Scan(&caseStatus).Error
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return model.StatusPending, nil // Return pending if no case is linked yet
+		}
+		return "", err
+	}
+
+	return caseStatus, nil
+}

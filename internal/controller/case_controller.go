@@ -300,3 +300,27 @@ func (c *CaseController) ExtractLinks(ctx *gin.Context) {
 	// Return the extracted links
 	ctx.JSON(http.StatusOK, gin.H{"links": links})
 }
+
+// GetCaseStatusByReportID returns the case status for a given report ID
+func (ctrl *CaseController) GetCaseStatusByReportID(c *gin.Context) {
+	reportID := c.Param("reportId")
+	if reportID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Report ID is required"})
+		return
+	}
+
+	status, err := ctrl.caseService.GetCaseStatusByReportID(reportID)
+	if err != nil {
+		if err.Error() == "report not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Report not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"reportId": reportID,
+		"status":   status,
+	})
+}

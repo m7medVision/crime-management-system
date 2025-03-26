@@ -69,7 +69,9 @@ func main() {
 	router.POST("/login", authController.Login)
 
 	// Public routes
-	router.POST("/reports", caseController.SubmitCrimeReport)
+	public := router.Group("/api/public")
+	public.POST("/reports", caseController.SubmitCrimeReport)
+	public.GET("/reports/:reportId/status", caseController.GetCaseStatusByReportID)
 
 	// Protected routes
 	protected := router.Group("/api")
