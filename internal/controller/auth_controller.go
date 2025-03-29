@@ -16,21 +16,39 @@ func NewAuthController(authService *service.AuthService) *AuthController {
 	return &AuthController{authService: authService}
 }
 
+// Login godoc
+// @Summary User login
+// @Description Authenticate user and return JWT token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param credentials body dto.LoginDTO true "Login Credentials"
+// @Success 200 {object} map[string]interface{} "token and user information"
+// @Failure 400 {object} map[string]string "Invalid login request"
+// @Failure 401 {object} map[string]string "Invalid credentials"
+// @Router /login [post]
 func (ctrl *AuthController) Login(c *gin.Context) {
 	var loginDTO dto.LoginDTO
 	if err := c.ShouldBindJSON(&loginDTO); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid login request"})
+		errorResponse := dto.ErrorDTO{
+			Message: "Invalid login request",
+			Code:    http.StatusBadRequest,
+		}
+		c.JSON(http.StatusBadRequest, errorResponse)
 		return
 	}
 
 	token, user, err := ctrl.authService.Login(loginDTO.Username, loginDTO.Password)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		c.JSON(http.StatusUnauthorized, dto.ErrorDTO{
+			Message: "Invalid credentials",
+			Code:    http.StatusUnauthorized,
+		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"token": token,
-		"user":  user,
+	c.JSON(http.StatusOK, dto.LoginResponseDTO{
+		Token: token,
+		User:  user.Email,
 	})
 }

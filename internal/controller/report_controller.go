@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/m7medVision/crime-management-system/internal/dto"
 	"github.com/m7medVision/crime-management-system/internal/service"
 )
 
@@ -16,19 +17,36 @@ func NewReportController(reportService *service.ReportService) *ReportController
 	return &ReportController{reportService: reportService}
 }
 
-// GenerateCaseReport generates a PDF report for a case
+// GenerateCaseReport godoc
+// @Summary Generate case report
+// @Description Generate a PDF report for a case with all details
+// @Tags reports
+// @Accept json
+// @Produce application/pdf
+// @Param id path int true "Case ID"
+// @Success 200 {file} binary "PDF report file"
+// @Failure 400 {object} dto.ErrorDTO "Invalid case ID"
+// @Failure 500 {object} dto.ErrorDTO "Server error"
+// @Security ApiKeyAuth
+// @Router /cases/{id}/report [get]
 func (ctrl *ReportController) GenerateCaseReport(c *gin.Context) {
 	// Parse case ID from URL parameter
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		c.JSON(http.StatusBadRequest, dto.ErrorDTO{
+			Message: "Invalid case ID",
+			Code:    http.StatusBadRequest,
+		})
 		return
 	}
 
 	// Generate the PDF report
 	pdf, err := ctrl.reportService.GenerateCaseReport(uint(caseID))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.ErrorDTO{
+			Message: err.Error(),
+			Code:    http.StatusInternalServerError,
+		})
 		return
 	}
 

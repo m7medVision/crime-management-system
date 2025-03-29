@@ -14,7 +14,23 @@ import (
 	"github.com/m7medVision/crime-management-system/internal/repository"
 	"github.com/m7medVision/crime-management-system/internal/service"
 	"github.com/m7medVision/crime-management-system/internal/util"
+
+	_ "github.com/m7medVision/crime-management-system/docs"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
+
+// @title District Core Crime Management System API
+// @version 1.0
+// @description API service for the District Core Crime Management System
+
+// @host localhost:8080
+// @BasePath /api
+
+// @securityDefinitions.basic BasicAuth
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 
 func main() {
 	// Load configuration
@@ -49,6 +65,7 @@ func main() {
 	authService := service.NewAuthService(userRepo, cfg.Auth.Secret, cfg.Auth.ExpiryTime)
 	caseService := service.NewCaseService(caseRepo, userRepo)
 	evidenceService := service.NewEvidenceService(evidenceRepo, caseRepo, userRepo, cfg.Storage.Minio.Bucket)
+	userService := service.NewUserService(userRepo)
 
 	// Initialize report service
 	templatePath := filepath.Join("templates", "case_report.tex")
@@ -62,9 +79,13 @@ func main() {
 	caseController := controller.NewCaseController(caseService)
 	evidenceController := controller.NewEvidenceController(evidenceService)
 	reportController := controller.NewReportController(reportService)
+	userController := controller.NewUserController(userService)
 
 	// Setup Gin router
 	router := gin.Default()
+
+	// Swagger documentation endpoint
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Auth routes
 	router.POST("/login", authController.Login)
@@ -80,7 +101,18 @@ func main() {
 	protected := router.Group("/api")
 	protected.Use(middleware.BasicAuth(db))
 	{
-		// Case routes - Admin & Investigator
+		// User management routes (admin only)
+		userRoutes := protected.Group("/users")
+		userRoutes.Use(middleware.RequireRole(model.RoleAdmin))
+		{
+			userRoutes.POST("", userController.CreateUser)
+			userRoutes.GET("", userController.ListUsers)
+			userRoutes.GET("/:id", userController.GetUser)
+			userRoutes.PUT("/:id", userController.UpdateUser)
+			userRoutes.DELETE("/:id", userController.DeleteUser)
+		}
+
+		// Case routes
 		protected.POST("/cases", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), caseController.CreateCase)
 		protected.PUT("/cases/:id", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), caseController.UpdateCase)
 		
@@ -121,10 +153,8 @@ func main() {
 	}
 	// Start server
 	port := cfg.Server.Port
-	if !strings.HasPrefix(port, ":") {
-		port = ":" + port
-	}
-	if err := router.Run(port); err != nil {
+	addr := "0.0.0.0:" + port
+	if err := router.Run(addr); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
