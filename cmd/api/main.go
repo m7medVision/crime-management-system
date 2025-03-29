@@ -71,39 +71,54 @@ func main() {
 
 	// Public routes
 	public := router.Group("/api/public")
-	public.POST("/reports", caseController.SubmitCrimeReport)
-	public.GET("/reports/:reportId/status", caseController.GetCaseStatusByReportID)
+	{
+		public.POST("/reports", caseController.SubmitCrimeReport)
+		public.GET("/reports/:reportId/status", caseController.GetCaseStatusByReportID)
+	}
 
 	// Protected routes
 	protected := router.Group("/api")
 	protected.Use(middleware.BasicAuth(db))
 	{
-		// Case routes
+		// Case routes - Admin & Investigator
 		protected.POST("/cases", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), caseController.CreateCase)
 		protected.PUT("/cases/:id", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), caseController.UpdateCase)
-		protected.GET("/cases/:id", caseController.GetCaseByID)
-		protected.GET("/cases", caseController.ListCases)
+		
+		// Case routes - All authenticated users (with clearance check)
+		protected.GET("/cases/:id", middleware.RequireClearance(model.ClearanceLow), caseController.GetCaseByID)
+		protected.GET("/cases", middleware.RequireClearance(model.ClearanceLow), caseController.ListCases)
 
-		protected.GET("/cases/:id/assignees", caseController.GetAssignees)
+		// Case status update - Officers, Investigators, and Admin
+		protected.PATCH("/cases/:id/status", middleware.RequireRole(model.RoleOfficer, model.RoleInvestigator, model.RoleAdmin), caseController.UpdateCaseStatus)
+
+		// Assignee management - Investigators and Admin
+		protected.GET("/cases/:id/assignees", middleware.RequireClearance(model.ClearanceLow), caseController.GetAssignees)
 		protected.POST("/cases/:id/assignees", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), caseController.AddAssignee)
 		protected.DELETE("/cases/:id/assignees", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), caseController.RemoveAssignee)
 
-		// Evidence routes
-		protected.POST("/evidence/text", evidenceController.CreateTextEvidence)
-		protected.POST("/evidence/image", evidenceController.CreateImageEvidence)
-		protected.GET("/evidence/:id", evidenceController.GetEvidenceByID)
-		protected.GET("/evidence/:id/image", evidenceController.GetEvidenceImage)
-		protected.PUT("/evidence/:id", evidenceController.UpdateEvidence)
+		// Evidence routes - Create/Upload (Officers, Investigators, Admin)
+		protected.POST("/evidence/text", middleware.RequireRole(model.RoleOfficer, model.RoleInvestigator, model.RoleAdmin), evidenceController.CreateTextEvidence)
+		protected.POST("/evidence/image", middleware.RequireRole(model.RoleOfficer, model.RoleInvestigator, model.RoleAdmin), evidenceController.CreateImageEvidence)
+		
+		// Evidence routes - View (with clearance check)
+		protected.GET("/evidence/:id", middleware.RequireClearance(model.ClearanceLow), evidenceController.GetEvidenceByID)
+		protected.GET("/evidence/:id/image", middleware.RequireClearance(model.ClearanceLow), evidenceController.GetEvidenceImage)
+		
+		// Evidence routes - Update/Delete (Investigators and Admin only)
+		protected.PUT("/evidence/:id", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), evidenceController.UpdateEvidence)
 		protected.DELETE("/evidence/:id", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), evidenceController.SoftDeleteEvidence)
 		protected.DELETE("/evidence/:id/permanent", middleware.RequireRole(model.RoleAdmin), evidenceController.HardDeleteEvidence)
+		
+		// Evidence audit (Admin only)
 		protected.GET("/evidence/:id/audit", middleware.RequireRole(model.RoleAdmin), evidenceController.GetEvidenceAuditLogs)
-		protected.GET("/cases/:id/evidence", caseController.GetEvidence)
-		protected.GET("/cases/:id/links", caseController.ExtractLinks)
+		
+		// Case evidence listing (with clearance check)
+		protected.GET("/cases/:id/evidence", middleware.RequireClearance(model.ClearanceLow), caseController.GetEvidence)
+		protected.GET("/cases/:id/links", middleware.RequireClearance(model.ClearanceLow), caseController.ExtractLinks)
 
-		// Report routes
-		protected.GET("/cases/:id/report", reportController.GenerateCaseReport)
+		// Report routes (with clearance check)
+		protected.GET("/cases/:id/report", middleware.RequireClearance(model.ClearanceLow), reportController.GenerateCaseReport)
 	}
-
 	// Start server
 	port := cfg.Server.Port
 	if !strings.HasPrefix(port, ":") {

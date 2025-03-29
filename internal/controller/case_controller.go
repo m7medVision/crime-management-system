@@ -324,3 +324,72 @@ func (ctrl *CaseController) GetCaseStatusByReportID(c *gin.Context) {
 		"status":   status,
 	})
 }
+
+func (ctrl *CaseController) UpdateCaseStatus(c *gin.Context) {
+	caseID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid case ID"})
+		return
+	}
+
+	var statusUpdate struct {
+		Status model.CaseStatus `json:"status" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&statusUpdate); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid status update data"})
+		return
+	}
+
+	// Validate status value
+	if statusUpdate.Status != model.StatusPending && 
+	   statusUpdate.Status != model.StatusOngoing && 
+	   statusUpdate.Status != model.StatusClosed {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid status value"})
+		return
+	}
+
+	// Get current user
+	user, exists := c.Get("user")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication required"})
+		return
+	}
+	userObj := user.(*model.User)
+
+	// Get the case
+	caseData, err := ctrl.caseService.GetCaseByID(uint(caseID))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Case not found"})
+		return
+	}
+
+	// Check if user is assigned to the case
+	isAssigned := false
+	assignees, err := ctrl.caseService.GetAssignees(uint(caseID))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check case assignment"})
+		return
+	}
+
+	for _, assignee := range assignees {
+		if assignee.ID == userObj.ID {
+			isAssigned = true
+			break
+		}
+	}
+
+	if !isAssigned && userObj.Role == model.RoleOfficer {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Officer must be assigned to the case to update its status"})
+		return
+	}
+
+	// Update the status
+	caseData.Status = statusUpdate.Status
+	result, err := ctrl.caseService.UpdateCase(caseData)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, result)
+}
