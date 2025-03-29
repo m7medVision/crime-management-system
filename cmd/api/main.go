@@ -147,6 +147,11 @@ func main() {
 		protected.GET("/cases/:id/evidence", middleware.RequireClearance(model.ClearanceLow), caseController.GetEvidence)
 		protected.GET("/cases/:id/links", middleware.RequireClearance(model.ClearanceLow), caseController.ExtractLinks)
 
+		// Case suspects, victims, and witnesses routes (with clearance check)
+		protected.GET("/cases/:id/suspects", middleware.RequireClearance(model.ClearanceLow), caseController.GetSuspects)
+		protected.GET("/cases/:id/victims", middleware.RequireClearance(model.ClearanceLow), caseController.GetVictims)
+		protected.GET("/cases/:id/witnesses", middleware.RequireClearance(model.ClearanceLow), caseController.GetWitnesses)
+
 		// Report routes (with clearance check)
 		protected.GET("/cases/:id/report", middleware.RequireClearance(model.ClearanceLow), reportController.GenerateCaseReport)
 	}
