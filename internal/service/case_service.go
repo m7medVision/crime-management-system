@@ -21,11 +21,11 @@ func NewCaseService(caseRepo *repository.CaseRepository, userRepo *repository.Us
 }
 
 func (s *CaseService) CreateCase(caseData *model.Case) (*model.Case, error) {
-	return s.caseRepo.Create(caseData)
+	return nil, s.caseRepo.Create(caseData)
 }
 
 func (s *CaseService) UpdateCase(caseData *model.Case) (*model.Case, error) {
-	return s.caseRepo.Update(caseData)
+	return nil, s.caseRepo.Update(caseData)
 }
 
 func (s *CaseService) GetCaseByID(caseID uint) (*model.Case, error) {
