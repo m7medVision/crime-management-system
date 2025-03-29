@@ -1,8 +1,11 @@
 package service
 
 import (
+	"errors"
+
 	"github.com/m7medVision/crime-management-system/internal/model"
 	"github.com/m7medVision/crime-management-system/internal/repository"
+	"github.com/m7medVision/crime-management-system/internal/util"
 )
 
 type CaseService struct {
@@ -38,15 +41,20 @@ func (s *CaseService) GetAssignees(caseID uint) ([]model.User, error) {
 }
 
 func (s *CaseService) AddAssignee(caseID, userID uint) error {
-	// check if user clearance is sufficient
 	user, err := s.userRepo.GetByID(userID)
 	if err != nil {
 		return err
 	}
-	if user.ClearanceLevel < model.ClearanceLevelOfficer {
-		return model.ErrInsufficientClearance
+
+	caseData, err := s.caseRepo.GetByID(caseID)
+	if err != nil {
+		return err
 	}
-	
+
+	if util.IsClearnceLevelHigherOrEqual(user.ClearanceLevel, caseData.AuthorizationLevel) {
+		return errors.New("insufficient clearance level")
+	}
+
 	return s.caseRepo.AddAssignee(caseID, userID)
 }
 
