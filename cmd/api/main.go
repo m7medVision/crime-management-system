@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/m7medVision/crime-management-system/internal/config"
@@ -115,7 +114,7 @@ func main() {
 		// Case routes
 		protected.POST("/cases", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), caseController.CreateCase)
 		protected.PUT("/cases/:id", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), caseController.UpdateCase)
-		
+
 		// Case routes - All authenticated users (with clearance check)
 		protected.GET("/cases/:id", middleware.RequireClearance(model.ClearanceLow), caseController.GetCaseByID)
 		protected.GET("/cases", middleware.RequireClearance(model.ClearanceLow), caseController.ListCases)
@@ -131,19 +130,19 @@ func main() {
 		// Evidence routes - Create/Upload (Officers, Investigators, Admin)
 		protected.POST("/evidence/text", middleware.RequireRole(model.RoleOfficer, model.RoleInvestigator, model.RoleAdmin), evidenceController.CreateTextEvidence)
 		protected.POST("/evidence/image", middleware.RequireRole(model.RoleOfficer, model.RoleInvestigator, model.RoleAdmin), evidenceController.CreateImageEvidence)
-		
+
 		// Evidence routes - View (with clearance check)
 		protected.GET("/evidence/:id", middleware.RequireClearance(model.ClearanceLow), evidenceController.GetEvidenceByID)
 		protected.GET("/evidence/:id/image", middleware.RequireClearance(model.ClearanceLow), evidenceController.GetEvidenceImage)
-		
+
 		// Evidence routes - Update/Delete (Investigators and Admin only)
 		protected.PUT("/evidence/:id", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), evidenceController.UpdateEvidence)
 		protected.DELETE("/evidence/:id", middleware.RequireRole(model.RoleInvestigator, model.RoleAdmin), evidenceController.SoftDeleteEvidence)
 		protected.DELETE("/evidence/:id/permanent", middleware.RequireRole(model.RoleAdmin), evidenceController.HardDeleteEvidence)
-		
+
 		// Evidence audit (Admin only)
 		protected.GET("/evidence/:id/audit", middleware.RequireRole(model.RoleAdmin), evidenceController.GetEvidenceAuditLogs)
-		
+
 		// Case evidence listing (with clearance check)
 		protected.GET("/cases/:id/evidence", middleware.RequireClearance(model.ClearanceLow), caseController.GetEvidence)
 		protected.GET("/cases/:id/links", middleware.RequireClearance(model.ClearanceLow), caseController.ExtractLinks)
