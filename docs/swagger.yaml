@@ -41,6 +41,13 @@ definitions:
     required:
     - confirmation
     type: object
+  github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
   github_com_m7medVision_crime-management-system_internal_dto.LoginDTO:
     properties:
       password:
@@ -53,15 +60,24 @@ definitions:
     type: object
   github_com_m7medVision_crime-management-system_internal_dto.ReportDTO:
     properties:
+      civil_id:
+        type: string
       description:
         type: string
+      email:
+        type: string
       location:
+        type: string
+      name:
         type: string
       title:
         type: string
     required:
+    - civil_id
     - description
+    - email
     - location
+    - name
     - title
     type: object
   github_com_m7medVision_crime-management-system_internal_dto.UpdateEvidenceDTO:
@@ -291,22 +307,28 @@ definitions:
         items:
           $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Case'
         type: array
+      civilID:
+        type: string
       createdAt:
         type: string
       deletedAt:
         $ref: '#/definitions/gorm.DeletedAt'
       description:
         type: string
+      email:
+        type: string
       id:
         type: integer
       location:
         type: string
+      name:
+        type: string
       reportID:
         type: string
-      reportedBy:
-        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
-      reportedByID:
-        type: integer
+      reportStatus:
+        type: string
+      role:
+        type: string
       title:
         type: string
       updatedAt:
@@ -681,15 +703,11 @@ paths:
         "400":
           description: Invalid case ID
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "500":
           description: Server error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
       - ApiKeyAuth: []
       summary: Generate case report
@@ -718,21 +736,15 @@ paths:
         "400":
           description: Invalid evidence ID
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "401":
           description: Authentication required
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "500":
           description: Server error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
       - ApiKeyAuth: []
       summary: Soft delete evidence
@@ -758,15 +770,11 @@ paths:
         "400":
           description: Invalid evidence ID
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "404":
           description: Evidence not found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
       - ApiKeyAuth: []
       summary: Get evidence details
@@ -798,21 +806,15 @@ paths:
         "400":
           description: Invalid evidence ID or data
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "401":
           description: Authentication required
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "500":
           description: Server error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
       - ApiKeyAuth: []
       summary: Update evidence
@@ -841,15 +843,11 @@ paths:
         "400":
           description: Invalid evidence ID
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "500":
           description: Server error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
       - ApiKeyAuth: []
       summary: Get evidence audit logs
@@ -877,15 +875,11 @@ paths:
         "400":
           description: Invalid evidence ID
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "500":
           description: Server error or not an image
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
       - ApiKeyAuth: []
       summary: Get evidence image
@@ -920,21 +914,15 @@ paths:
         "400":
           description: Invalid evidence ID or missing confirmation
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "401":
           description: Authentication required
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "500":
           description: Server error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
       - ApiKeyAuth: []
       summary: Permanently delete evidence
@@ -970,21 +958,15 @@ paths:
         "400":
           description: Invalid request or not an image
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "401":
           description: Authentication required
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "500":
           description: Server error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
       - ApiKeyAuth: []
       summary: Upload image evidence
@@ -1012,21 +994,15 @@ paths:
         "400":
           description: Invalid evidence data
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "401":
           description: Authentication required
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "500":
           description: Server error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
       - ApiKeyAuth: []
       summary: Create text evidence
@@ -1173,9 +1149,7 @@ paths:
         "403":
           description: Permission denied
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
       - ApiKeyAuth: []
       summary: List all users
@@ -1202,15 +1176,11 @@ paths:
         "400":
           description: Invalid user data
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "403":
           description: Permission denied
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
       - ApiKeyAuth: []
       summary: Create a new user
@@ -1239,21 +1209,15 @@ paths:
         "400":
           description: Invalid user ID
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "403":
           description: Permission denied
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "404":
           description: User not found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
       - ApiKeyAuth: []
       summary: Delete a user
@@ -1279,21 +1243,15 @@ paths:
         "400":
           description: Invalid user ID
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "403":
           description: Permission denied
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "404":
           description: User not found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
       - ApiKeyAuth: []
       summary: Get user details
@@ -1325,21 +1283,15 @@ paths:
         "400":
           description: Invalid user data
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "403":
           description: Permission denied
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
         "404":
           description: User not found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
       - ApiKeyAuth: []
       summary: Update an existing user
