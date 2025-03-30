@@ -14,7 +14,6 @@ const (
 
 type Case struct {
 	gorm.Model
-	CaseNumber         string         `gorm:"uniqueIndex;not null"`
 	Name               string         `gorm:"not null"`
 	Description        string         `gorm:"type:text;not null"`
 	Area               string         `gorm:"not null"` // City/Area

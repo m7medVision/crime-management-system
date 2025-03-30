@@ -174,16 +174,6 @@ func (ctrl *CaseController) GetCaseByID(c *gin.Context) {
 		return
 	}
 
-	// Sanitize sensitive information
-	if caseData.CreatedBy.ID != 0 {
-		caseData.CreatedBy.Password = ""
-	}
-
-	// Sanitize assignees' sensitive information
-	for i := range caseData.Assignees {
-		caseData.Assignees[i].Password = ""
-	}
-
 	c.JSON(http.StatusOK, caseData)
 }
 

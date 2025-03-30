@@ -30,7 +30,7 @@ func (s *UserService) CreateUser(user *model.User) (*model.User, error) {
 	if err := s.userRepo.Create(user); err != nil {
 		return nil, err
 	}
-	return user, nil
+	return user.SafeResponse(), nil
 }
 
 func (s *UserService) UpdateUser(user *model.User) (*model.User, error) {
@@ -42,7 +42,7 @@ func (s *UserService) UpdateUser(user *model.User) (*model.User, error) {
 	if err := s.userRepo.Update(user); err != nil {
 		return nil, err
 	}
-	return user, nil
+	return user.SafeResponse(), nil
 }
 
 func (s *UserService) DeleteUser(id uint) error {
@@ -50,9 +50,23 @@ func (s *UserService) DeleteUser(id uint) error {
 }
 
 func (s *UserService) GetUserByID(id uint) (*model.User, error) {
-	return s.userRepo.GetByID(id)
+	user, err := s.userRepo.GetByID(id)
+	if err != nil {
+		return nil, err
+	}
+	return user.SafeResponse(), nil
 }
 
 func (s *UserService) ListUsers(offset, limit int) ([]model.User, int64, error) {
-	return s.userRepo.List(offset, limit)
+	users, count, err := s.userRepo.List(offset, limit)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	// Remove passwords from all users
+	for i := range users {
+		users[i].Password = ""
+	}
+
+	return users, count, nil
 }

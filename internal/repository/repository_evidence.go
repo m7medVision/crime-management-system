@@ -25,6 +25,12 @@ func (r *EvidenceRepository) GetByID(id uint) (*model.Evidence, error) {
 	if result.Error != nil {
 		return nil, result.Error
 	}
+
+	// Remove password from AddedBy user
+	if evidence.AddedBy.ID != 0 {
+		evidence.AddedBy.Password = ""
+	}
+
 	return &evidence, nil
 }
 
@@ -51,6 +57,14 @@ func (r *EvidenceRepository) ListByCaseID(caseID uint) ([]model.Evidence, error)
 	var evidence []model.Evidence
 	err := r.db.Where("case_id = ? AND is_deleted = ?", caseID, false).
 		Preload("AddedBy").Find(&evidence).Error
+
+	// Remove passwords from all AddedBy users
+	for i := range evidence {
+		if evidence[i].AddedBy.ID != 0 {
+			evidence[i].AddedBy.Password = ""
+		}
+	}
+
 	return evidence, err
 }
 
@@ -70,5 +84,13 @@ func (r *EvidenceRepository) GetAuditLogsForEvidence(evidenceID uint) ([]model.A
 	var logs []model.AuditLog
 	err := r.db.Where("entity_type = ? AND entity_id = ?", "evidence", evidenceID).
 		Preload("User").Find(&logs).Error
+
+	// Remove passwords from all User records
+	for i := range logs {
+		if logs[i].User.ID != 0 {
+			logs[i].User.Password = ""
+		}
+	}
+
 	return logs, err
 }

@@ -35,3 +35,10 @@ type User struct {
 	IsActive       bool           `gorm:"default:true"`
 	LastLogin      *time.Time
 }
+
+// SafeResponse returns a copy of the user with password removed for safe API responses
+func (u *User) SafeResponse() *User {
+	userCopy := *u
+	userCopy.Password = ""
+	return &userCopy
+}

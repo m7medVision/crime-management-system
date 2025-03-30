@@ -22,16 +22,7 @@ func (r *CaseRepository) Create(cas *model.Case) error {
 
 func (r *CaseRepository) GetByID(id uint) (*model.Case, error) {
 	var cas model.Case
-	result := r.db.Preload("CreatedBy").Preload("ReportedBy").First(&cas, id)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-	return &cas, nil
-}
-
-func (r *CaseRepository) GetByCaseNumber(caseNumber string) (*model.Case, error) {
-	var cas model.Case
-	result := r.db.Preload("CreatedBy").Preload("ReportedBy").Where("case_number = ?", caseNumber).First(&cas)
+	result := r.db.Where("id = ?", id).Preload("CreatedBy").Preload("ReportedBy").First(&cas)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -75,6 +66,12 @@ func (r *CaseRepository) List(offset, limit int, search string) ([]model.Case, i
 func (r *CaseRepository) GetAssignees(caseID uint) ([]model.User, error) {
 	var users []model.User
 	err := r.db.Model(&model.Case{Model: gorm.Model{ID: caseID}}).Association("Assignees").Find(&users)
+
+	// Remove passwords from all users
+	for i := range users {
+		users[i].Password = ""
+	}
+
 	return users, err
 }
 

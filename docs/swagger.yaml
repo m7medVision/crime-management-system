@@ -189,8 +189,6 @@ definitions:
         type: array
       authorizationLevel:
         $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.ClearanceLevel'
-      caseNumber:
-        type: string
       caseType:
         type: string
       createdAt:
@@ -211,8 +209,6 @@ definitions:
         type: integer
       name:
         type: string
-      reportedBy:
-        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
       reports:
         items:
           $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Report'

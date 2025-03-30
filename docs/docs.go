@@ -1544,9 +1544,6 @@ const docTemplate = `{
                 "authorizationLevel": {
                     "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_model.ClearanceLevel"
                 },
-                "caseNumber": {
-                    "type": "string"
-                },
                 "caseType": {
                     "type": "string"
                 },
@@ -1576,9 +1573,6 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
-                },
-                "reportedBy": {
-                    "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_model.User"
                 },
                 "reports": {
                     "type": "array",

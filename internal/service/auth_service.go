@@ -50,5 +50,6 @@ func (s *AuthService) Login(username, password string) (string, *model.User, err
 		return "", nil, err
 	}
 
-	return token, user, nil
+	// Return safe user response without password
+	return token, user.SafeResponse(), nil
 }
