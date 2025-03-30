@@ -132,7 +132,7 @@ func (r *CaseRepository) ExtractLinks(caseID uint) ([]string, error) {
 
 func (r *CaseRepository) GetStatusByReportID(reportID string) (model.CaseStatus, error) {
 	var report model.Report
-	err := r.db.Where("report_id = ?", reportID).First(&report).Error
+	err := r.db.Where("id = ?", reportID).First(&report).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return "", errors.New("report not found")

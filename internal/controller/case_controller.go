@@ -525,9 +525,9 @@ func (ctrl *CaseController) UpdateCaseStatus(c *gin.Context) {
 	}
 
 	// Validate status value
-	if statusUpdate.Status != model.StatusPending && 
-	   statusUpdate.Status != model.StatusOngoing && 
-	   statusUpdate.Status != model.StatusClosed {
+	if statusUpdate.Status != model.StatusPending &&
+		statusUpdate.Status != model.StatusOngoing &&
+		statusUpdate.Status != model.StatusClosed {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid status value"})
 		return
 	}
