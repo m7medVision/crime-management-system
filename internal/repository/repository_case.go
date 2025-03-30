@@ -22,7 +22,7 @@ func (r *CaseRepository) Create(cas *model.Case) error {
 
 func (r *CaseRepository) GetByID(id uint) (*model.Case, error) {
 	var cas model.Case
-	result := r.db.Where("id = ?", id).Preload("CreatedBy").Preload("ReportedBy").First(&cas)
+	result := r.db.Where("id = ?", id).First(&cas)
 	if result.Error != nil {
 		return nil, result.Error
 	}
