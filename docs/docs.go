@@ -352,19 +352,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid case ID",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "500": {
                         "description": "Server error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     }
                 }
@@ -420,28 +414,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid request or not an image",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "401": {
                         "description": "Authentication required",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "500": {
                         "description": "Server error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     }
                 }
@@ -486,28 +471,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid evidence data",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "401": {
                         "description": "Authentication required",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "500": {
                         "description": "Server error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     }
                 }
@@ -550,19 +526,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid evidence ID",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "404": {
                         "description": "Evidence not found",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     }
                 }
@@ -612,28 +582,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid evidence ID or data",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "401": {
                         "description": "Authentication required",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "500": {
                         "description": "Server error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     }
                 }
@@ -677,28 +638,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid evidence ID",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "401": {
                         "description": "Authentication required",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "500": {
                         "description": "Server error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     }
                 }
@@ -745,19 +697,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid evidence ID",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "500": {
                         "description": "Server error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     }
                 }
@@ -800,19 +746,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid evidence ID",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "500": {
                         "description": "Server error or not an image",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     }
                 }
@@ -867,28 +807,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid evidence ID or missing confirmation",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "401": {
                         "description": "Authentication required",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "500": {
                         "description": "Server error",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     }
                 }
@@ -1111,10 +1042,7 @@ const docTemplate = `{
                     "403": {
                         "description": "Permission denied",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     }
                 }
@@ -1157,19 +1085,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid user data",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "403": {
                         "description": "Permission denied",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     }
                 }
@@ -1212,28 +1134,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid user ID",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "403": {
                         "description": "Permission denied",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "404": {
                         "description": "User not found",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     }
                 }
@@ -1283,28 +1196,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid user data",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "403": {
                         "description": "Permission denied",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "404": {
                         "description": "User not found",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     }
                 }
@@ -1348,28 +1252,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid user ID",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "403": {
                         "description": "Permission denied",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     },
                     "404": {
                         "description": "User not found",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
                         }
                     }
                 }
@@ -1437,6 +1332,17 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_m7medVision_crime-management-system_internal_dto.LoginDTO": {
             "type": "object",
             "required": [
@@ -1455,15 +1361,27 @@ const docTemplate = `{
         "github_com_m7medVision_crime-management-system_internal_dto.ReportDTO": {
             "type": "object",
             "required": [
+                "civil_id",
                 "description",
+                "email",
                 "location",
+                "name",
                 "title"
             ],
             "properties": {
+                "civil_id": {
+                    "type": "string"
+                },
                 "description": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string"
+                },
                 "location": {
+                    "type": "string"
+                },
+                "name": {
                     "type": "string"
                 },
                 "title": {
@@ -1796,6 +1714,9 @@ const docTemplate = `{
                         "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_model.Case"
                     }
                 },
+                "civilID": {
+                    "type": "string"
+                },
                 "createdAt": {
                     "type": "string"
                 },
@@ -1805,20 +1726,26 @@ const docTemplate = `{
                 "description": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
                 "location": {
                     "type": "string"
                 },
+                "name": {
+                    "type": "string"
+                },
                 "reportID": {
                     "type": "string"
                 },
-                "reportedBy": {
-                    "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_model.User"
+                "reportStatus": {
+                    "type": "string"
                 },
-                "reportedByID": {
-                    "type": "integer"
+                "role": {
+                    "type": "string"
                 },
                 "title": {
                     "type": "string"
