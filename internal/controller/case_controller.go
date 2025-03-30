@@ -57,7 +57,6 @@ func (ctrl *CaseController) CreateCase(c *gin.Context) {
 		CaseType:           caseDTO.CaseType,
 		AuthorizationLevel: caseDTO.AuthorizationLevel,
 		CreatedByID:        userID,
-		ReportedByID:       caseDTO.ReportedByID,
 	}
 
 	result, err := ctrl.caseService.CreateCase(caseData)
@@ -131,7 +130,6 @@ func (ctrl *CaseController) UpdateCase(c *gin.Context) {
 	caseData.CaseType = caseDTO.CaseType
 	caseData.AuthorizationLevel = caseDTO.AuthorizationLevel
 	caseData.CreatedByID = userID
-	caseData.ReportedByID = caseDTO.ReportedByID
 
 	result, err := ctrl.caseService.UpdateCase(caseData)
 	if err != nil {

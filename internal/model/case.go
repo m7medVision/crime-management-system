@@ -23,8 +23,6 @@ type Case struct {
 	AuthorizationLevel ClearanceLevel `gorm:"not null;default:'low'"`
 	CreatedByID        uint           `gorm:"not null"`
 	CreatedBy          User           `gorm:"foreignKey:CreatedByID"`
-	ReportedByID       uint           `gorm:"not null"`
-	ReportedBy         User           `gorm:"foreignKey:ReportedByID"`
 	Reports            []Report       `gorm:"many2many:case_reports;"`
 	Assignees          []User         `gorm:"many2many:case_assignees;"`
 	Evidence           []Evidence     `gorm:"foreignKey:CaseID"`

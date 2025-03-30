@@ -10,5 +10,4 @@ type CaseDTO struct {
 	Area               string               `json:"area" binding:"required"`
 	CaseType           string               `json:"caseType" binding:"required"`
 	AuthorizationLevel model.ClearanceLevel `json:"authorizationLevel" binding:"required"`
-	ReportedByID       uint                 `json:"reportedById" binding:"required"`
 }

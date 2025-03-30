@@ -12,15 +12,12 @@ definitions:
         type: string
       name:
         type: string
-      reportedById:
-        type: integer
     required:
     - area
     - authorizationLevel
     - caseType
     - description
     - name
-    - reportedById
     type: object
   github_com_m7medVision_crime-management-system_internal_dto.CreateTextEvidenceDTO:
     properties:
@@ -216,8 +213,6 @@ definitions:
         type: string
       reportedBy:
         $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
-      reportedByID:
-        type: integer
       reports:
         items:
           $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Report'

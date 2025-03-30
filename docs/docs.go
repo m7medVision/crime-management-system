@@ -1279,8 +1279,7 @@ const docTemplate = `{
                 "authorizationLevel",
                 "caseType",
                 "description",
-                "name",
-                "reportedById"
+                "name"
             ],
             "properties": {
                 "area": {
@@ -1297,9 +1296,6 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
-                },
-                "reportedById": {
-                    "type": "integer"
                 }
             }
         },
@@ -1583,9 +1579,6 @@ const docTemplate = `{
                 },
                 "reportedBy": {
                     "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_model.User"
-                },
-                "reportedByID": {
-                    "type": "integer"
                 },
                 "reports": {
                     "type": "array",

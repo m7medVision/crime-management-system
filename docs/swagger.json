@@ -1273,8 +1273,7 @@
                 "authorizationLevel",
                 "caseType",
                 "description",
-                "name",
-                "reportedById"
+                "name"
             ],
             "properties": {
                 "area": {
@@ -1291,9 +1290,6 @@
                 },
                 "name": {
                     "type": "string"
-                },
-                "reportedById": {
-                    "type": "integer"
                 }
             }
         },
@@ -1577,9 +1573,6 @@
                 },
                 "reportedBy": {
                     "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_model.User"
-                },
-                "reportedByID": {
-                    "type": "integer"
                 },
                 "reports": {
                     "type": "array",
