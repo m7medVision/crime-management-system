@@ -323,12 +323,8 @@ definitions:
         type: string
       name:
         type: string
-      name:
+      reportStatus:
         type: string
-      reportedBy:
-        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.User'
-      reportedByID:
-        type: integer
       title:
         type: string
       updatedAt:
