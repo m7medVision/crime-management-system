@@ -323,11 +323,7 @@ definitions:
         type: string
       name:
         type: string
-      reportID:
-        type: string
       reportStatus:
-        type: string
-      role:
         type: string
       title:
         type: string
@@ -524,7 +520,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: List all cases
       tags:
       - cases
@@ -559,7 +555,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Create a new case
       tags:
       - cases
@@ -594,7 +590,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Get case details
       tags:
       - cases
@@ -640,7 +636,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Update an existing case
       tags:
       - cases
@@ -677,7 +673,7 @@ paths:
               type: string
             type: object
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Get case assignees
       tags:
       - cases
@@ -709,7 +705,7 @@ paths:
           schema:
             $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Generate case report
       tags:
       - reports
@@ -746,7 +742,7 @@ paths:
           schema:
             $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Soft delete evidence
       tags:
       - evidence
@@ -776,7 +772,7 @@ paths:
           schema:
             $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Get evidence details
       tags:
       - evidence
@@ -816,7 +812,7 @@ paths:
           schema:
             $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Update evidence
       tags:
       - evidence
@@ -849,7 +845,7 @@ paths:
           schema:
             $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Get evidence audit logs
       tags:
       - evidence
@@ -881,7 +877,7 @@ paths:
           schema:
             $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Get evidence image
       tags:
       - evidence
@@ -924,7 +920,7 @@ paths:
           schema:
             $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Permanently delete evidence
       tags:
       - evidence
@@ -968,7 +964,7 @@ paths:
           schema:
             $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Upload image evidence
       tags:
       - evidence
@@ -1004,7 +1000,7 @@ paths:
           schema:
             $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Create text evidence
       tags:
       - evidence
@@ -1151,7 +1147,7 @@ paths:
           schema:
             $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: List all users
       tags:
       - users
@@ -1182,7 +1178,7 @@ paths:
           schema:
             $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Create a new user
       tags:
       - users
@@ -1219,7 +1215,7 @@ paths:
           schema:
             $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Delete a user
       tags:
       - users
@@ -1253,7 +1249,7 @@ paths:
           schema:
             $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Get user details
       tags:
       - users
@@ -1293,15 +1289,11 @@ paths:
           schema:
             $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
       security:
-      - ApiKeyAuth: []
+      - BasicAuth: []
       summary: Update an existing user
       tags:
       - users
 securityDefinitions:
-  ApiKeyAuth:
-    in: header
-    name: Authorization
-    type: apiKey
   BasicAuth:
     type: basic
 swagger: "2.0"

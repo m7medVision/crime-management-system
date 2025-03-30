@@ -29,7 +29,7 @@ func NewEvidenceController(evidenceService *service.EvidenceService) *EvidenceCo
 // @Failure 400 {object} dto.ErrorDTO "Invalid evidence data"
 // @Failure 401 {object} dto.ErrorDTO "Authentication required"
 // @Failure 500 {object} dto.ErrorDTO "Server error"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /evidence/text [post]
 func (ctrl *EvidenceController) CreateTextEvidence(c *gin.Context) {
 	var evidenceDTO dto.CreateTextEvidenceDTO
@@ -81,7 +81,7 @@ func (ctrl *EvidenceController) CreateTextEvidence(c *gin.Context) {
 // @Failure 400 {object} dto.ErrorDTO "Invalid request or not an image"
 // @Failure 401 {object} dto.ErrorDTO "Authentication required"
 // @Failure 500 {object} dto.ErrorDTO "Server error"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /evidence/image [post]
 func (ctrl *EvidenceController) CreateImageEvidence(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.PostForm("caseId"))
@@ -135,7 +135,7 @@ func (ctrl *EvidenceController) CreateImageEvidence(c *gin.Context) {
 // @Success 200 {object} model.Evidence
 // @Failure 400 {object} dto.ErrorDTO "Invalid evidence ID"
 // @Failure 404 {object} dto.ErrorDTO "Evidence not found"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /evidence/{id} [get]
 func (ctrl *EvidenceController) GetEvidenceByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
@@ -169,7 +169,7 @@ func (ctrl *EvidenceController) GetEvidenceByID(c *gin.Context) {
 // @Success 200 {file} binary "Image file"
 // @Failure 400 {object} dto.ErrorDTO "Invalid evidence ID"
 // @Failure 500 {object} dto.ErrorDTO "Server error or not an image"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /evidence/{id}/image [get]
 func (ctrl *EvidenceController) GetEvidenceImage(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
@@ -212,7 +212,7 @@ func (ctrl *EvidenceController) GetEvidenceImage(c *gin.Context) {
 // @Failure 400 {object} dto.ErrorDTO "Invalid evidence ID or data"
 // @Failure 401 {object} dto.ErrorDTO "Authentication required"
 // @Failure 500 {object} dto.ErrorDTO "Server error"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /evidence/{id} [put]
 func (ctrl *EvidenceController) UpdateEvidence(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
@@ -266,7 +266,7 @@ func (ctrl *EvidenceController) UpdateEvidence(c *gin.Context) {
 // @Failure 400 {object} dto.ErrorDTO "Invalid evidence ID"
 // @Failure 401 {object} dto.ErrorDTO "Authentication required"
 // @Failure 500 {object} dto.ErrorDTO "Server error"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /evidence/{id} [delete]
 func (ctrl *EvidenceController) SoftDeleteEvidence(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
@@ -312,7 +312,7 @@ func (ctrl *EvidenceController) SoftDeleteEvidence(c *gin.Context) {
 // @Failure 400 {object} dto.ErrorDTO "Invalid evidence ID or missing confirmation"
 // @Failure 401 {object} dto.ErrorDTO "Authentication required"
 // @Failure 500 {object} dto.ErrorDTO "Server error"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /evidence/{id}/permanent [delete]
 func (ctrl *EvidenceController) HardDeleteEvidence(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
@@ -373,7 +373,7 @@ func (ctrl *EvidenceController) HardDeleteEvidence(c *gin.Context) {
 // @Success 200 {array} model.AuditLog
 // @Failure 400 {object} dto.ErrorDTO "Invalid evidence ID"
 // @Failure 500 {object} dto.ErrorDTO "Server error"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /evidence/{id}/audit [get]
 func (ctrl *EvidenceController) GetEvidenceAuditLogs(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))

@@ -19,7 +19,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Get a paginated list of cases with optional search",
@@ -77,7 +77,7 @@ const docTemplate = `{
             "post": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Create a new criminal case record",
@@ -134,7 +134,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Retrieve detailed information about a specific case",
@@ -187,7 +187,7 @@ const docTemplate = `{
             "put": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Update an existing criminal case record",
@@ -260,7 +260,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Retrieve list of users assigned to a case",
@@ -319,7 +319,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Generate a PDF report for a case with all details",
@@ -368,7 +368,7 @@ const docTemplate = `{
             "post": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Upload an image as evidence for a case",
@@ -436,7 +436,7 @@ const docTemplate = `{
             "post": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Add textual evidence to a case",
@@ -493,7 +493,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Retrieve details of a specific evidence item",
@@ -540,7 +540,7 @@ const docTemplate = `{
             "put": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Update evidence remarks",
@@ -602,7 +602,7 @@ const docTemplate = `{
             "delete": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Mark evidence as deleted (soft delete)",
@@ -660,7 +660,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Retrieve audit logs for a specific evidence item",
@@ -713,7 +713,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Stream an evidence image file",
@@ -762,7 +762,7 @@ const docTemplate = `{
             "delete": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Permanently delete evidence (requires confirmation)",
@@ -1001,7 +1001,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Admin endpoint to get a paginated list of users",
@@ -1050,7 +1050,7 @@ const docTemplate = `{
             "post": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Admin endpoint to create a new user with specified role and clearance",
@@ -1101,7 +1101,7 @@ const docTemplate = `{
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Admin endpoint to get details of a specific user",
@@ -1154,7 +1154,7 @@ const docTemplate = `{
             "put": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Admin endpoint to update user details including role and clearance",
@@ -1216,7 +1216,7 @@ const docTemplate = `{
             "delete": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "BasicAuth": []
                     }
                 ],
                 "description": "Admin endpoint to delete a user",
@@ -1738,13 +1738,7 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "reportID": {
-                    "type": "string"
-                },
                 "reportStatus": {
-                    "type": "string"
-                },
-                "role": {
                     "type": "string"
                 },
                 "title": {
@@ -1978,11 +1972,6 @@ const docTemplate = `{
         }
     },
     "securityDefinitions": {
-        "ApiKeyAuth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
-        },
         "BasicAuth": {
             "type": "basic"
         }

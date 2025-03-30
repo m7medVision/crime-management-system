@@ -27,9 +27,6 @@ import (
 // @BasePath /api
 
 // @securityDefinitions.basic BasicAuth
-// @securityDefinitions.apikey ApiKeyAuth
-// @in header
-// @name Authorization
 
 func main() {
 	// Load configuration
@@ -87,7 +84,7 @@ func main() {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Auth routes
-	router.POST("/login", authController.Login)
+	router.POST("/api/login", authController.Login)
 
 	// Public routes
 	public := router.Group("/api/public")

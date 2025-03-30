@@ -28,7 +28,7 @@ func NewCaseController(caseService *service.CaseService) *CaseController {
 // @Success 201 {object} model.Case
 // @Failure 400 {object} map[string]string "Invalid case data"
 // @Failure 403 {object} map[string]string "Permission denied"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /cases [post]
 func (ctrl *CaseController) CreateCase(c *gin.Context) {
 	var caseDTO dto.CaseDTO
@@ -84,7 +84,7 @@ func (ctrl *CaseController) CreateCase(c *gin.Context) {
 // @Failure 400 {object} map[string]string "Invalid case data"
 // @Failure 403 {object} map[string]string "Permission denied"
 // @Failure 404 {object} map[string]string "Case not found"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /cases/{id} [put]
 func (ctrl *CaseController) UpdateCase(c *gin.Context) {
 	var caseDTO dto.CaseDTO
@@ -155,7 +155,7 @@ func (ctrl *CaseController) UpdateCase(c *gin.Context) {
 // @Success 200 {object} model.Case
 // @Failure 400 {object} map[string]string "Invalid case ID"
 // @Failure 404 {object} map[string]string "Case not found"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /cases/{id} [get]
 func (ctrl *CaseController) GetCaseByID(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
@@ -190,7 +190,7 @@ func (ctrl *CaseController) GetCaseByID(c *gin.Context) {
 // @Param search query string false "Search term for case name or description"
 // @Success 200 {object} map[string]interface{} "cases and total count"
 // @Failure 500 {object} map[string]string "Server error"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /cases [get]
 func (ctrl *CaseController) ListCases(c *gin.Context) {
 	offset, _ := strconv.Atoi(c.DefaultQuery("offset", "0"))
@@ -222,7 +222,7 @@ func (ctrl *CaseController) ListCases(c *gin.Context) {
 // @Success 200 {array} model.User
 // @Failure 400 {object} map[string]string "Invalid case ID"
 // @Failure 500 {object} map[string]string "Server error"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /cases/{id}/assignees [get]
 func (ctrl *CaseController) GetAssignees(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))

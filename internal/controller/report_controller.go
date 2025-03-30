@@ -27,7 +27,7 @@ func NewReportController(reportService *service.ReportService) *ReportController
 // @Success 200 {file} binary "PDF report file"
 // @Failure 400 {object} dto.ErrorDTO "Invalid case ID"
 // @Failure 500 {object} dto.ErrorDTO "Server error"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /cases/{id}/report [get]
 func (ctrl *ReportController) GenerateCaseReport(c *gin.Context) {
 	// Parse case ID from URL parameter

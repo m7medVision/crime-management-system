@@ -29,7 +29,7 @@ func NewUserController(userService *service.UserService) *UserController {
 // @Success 201 {object} model.User
 // @Failure 400 {object} dto.ErrorDTO "Invalid user data"
 // @Failure 403 {object} dto.ErrorDTO "Permission denied"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /users [post]
 func (ctrl *UserController) CreateUser(c *gin.Context) {
 	var userDTO dto.UserDTO
@@ -87,7 +87,7 @@ func (ctrl *UserController) CreateUser(c *gin.Context) {
 // @Failure 400 {object} dto.ErrorDTO "Invalid user data"
 // @Failure 403 {object} dto.ErrorDTO "Permission denied"
 // @Failure 404 {object} dto.ErrorDTO "User not found"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /users/{id} [put]
 func (ctrl *UserController) UpdateUser(c *gin.Context) {
 	userID, err := strconv.ParseUint(c.Param("id"), 10, 32)
@@ -171,7 +171,7 @@ func (ctrl *UserController) UpdateUser(c *gin.Context) {
 // @Failure 400 {object} dto.ErrorDTO "Invalid user ID"
 // @Failure 403 {object} dto.ErrorDTO "Permission denied"
 // @Failure 404 {object} dto.ErrorDTO "User not found"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /users/{id} [delete]
 func (ctrl *UserController) DeleteUser(c *gin.Context) {
 	userID, err := strconv.ParseUint(c.Param("id"), 10, 32)
@@ -204,7 +204,7 @@ func (ctrl *UserController) DeleteUser(c *gin.Context) {
 // @Param limit query int false "Items per page" default(10)
 // @Success 200 {object} map[string]interface{} "users and total count"
 // @Failure 403 {object} dto.ErrorDTO "Permission denied"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /users [get]
 func (ctrl *UserController) ListUsers(c *gin.Context) {
 	offset, _ := strconv.Atoi(c.DefaultQuery("offset", "0"))
@@ -241,7 +241,7 @@ func (ctrl *UserController) ListUsers(c *gin.Context) {
 // @Failure 400 {object} dto.ErrorDTO "Invalid user ID"
 // @Failure 403 {object} dto.ErrorDTO "Permission denied"
 // @Failure 404 {object} dto.ErrorDTO "User not found"
-// @Security ApiKeyAuth
+// @Security BasicAuth
 // @Router /users/{id} [get]
 func (ctrl *UserController) GetUser(c *gin.Context) {
 	userID, err := strconv.ParseUint(c.Param("id"), 10, 32)
