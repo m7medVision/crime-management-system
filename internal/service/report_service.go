@@ -3,9 +3,6 @@ package service
 import (
 	"bytes"
 	"fmt"
-	"html/template"
-	"os"
-	"path/filepath"
 	"time"
 
 	"codeberg.org/go-pdf/fpdf"
@@ -23,27 +20,12 @@ type CaseReportData struct {
 }
 
 type ReportService struct {
-	caseRepo     *repository.CaseRepository
-	htmlTemplate *template.Template
-	templatePath string
+	caseRepo *repository.CaseRepository
 }
 
-func NewReportService(caseRepo *repository.CaseRepository, templatePath string) (*ReportService, error) {
-	// Ensure template directory exists
-	if err := os.MkdirAll(filepath.Dir(templatePath), 0755); err != nil {
-		return nil, fmt.Errorf("failed to create template directory: %w", err)
-	}
-
-	// Parse the template file
-	tmpl, err := template.ParseFiles(templatePath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse template: %w", err)
-	}
-
+func NewReportService(caseRepo *repository.CaseRepository) (*ReportService, error) {
 	return &ReportService{
-		caseRepo:     caseRepo,
-		htmlTemplate: tmpl,
-		templatePath: templatePath,
+		caseRepo: caseRepo,
 	}, nil
 }
 

@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/m7medVision/crime-management-system/internal/config"
@@ -64,8 +63,7 @@ func main() {
 	userService := service.NewUserService(userRepo)
 
 	// Initialize report service
-	templatePath := filepath.Join("templates", "case_report.html")
-	reportService, err := service.NewReportService(caseRepo, templatePath)
+	reportService, err := service.NewReportService(caseRepo)
 	if err != nil {
 		log.Fatalf("Failed to initialize report service: %v", err)
 	}
