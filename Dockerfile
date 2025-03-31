@@ -4,11 +4,8 @@ FROM golang:1.24-alpine
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
-# Install required packages for PDF generation and debugging tools
-RUN apk add --no-cache texlive texlive-xetex fontconfig msttcorefonts-installer curl
-
-# Install Microsoft TrueType fonts
-RUN update-ms-fonts && fc-cache -f
+# Install required fonts for PDF generation
+RUN apk add --no-cache fontconfig curl
 
 # Copy go mod and sum files
 COPY go.mod go.sum ./

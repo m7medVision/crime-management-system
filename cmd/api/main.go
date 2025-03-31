@@ -64,7 +64,7 @@ func main() {
 	userService := service.NewUserService(userRepo)
 
 	// Initialize report service
-	templatePath := filepath.Join("templates", "case_report.tex")
+	templatePath := filepath.Join("templates", "case_report.html")
 	reportService, err := service.NewReportService(caseRepo, templatePath)
 	if err != nil {
 		log.Fatalf("Failed to initialize report service: %v", err)
