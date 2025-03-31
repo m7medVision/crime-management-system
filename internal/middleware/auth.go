@@ -78,7 +78,7 @@ func RequireClearance(minClearance model.ClearanceLevel) gin.HandlerFunc {
 			return
 		}
 
-		if util.IsClearnceLevelHigherOrEqual(user.ClearanceLevel, minClearance) {
+		if !util.IsClearnceLevelHigherOrEqual(user.ClearanceLevel, minClearance) {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "Insufficient clearance level"})
 			return
 		}

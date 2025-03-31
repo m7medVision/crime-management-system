@@ -51,7 +51,7 @@ func (s *CaseService) AddAssignee(caseID, userID uint) error {
 		return err
 	}
 
-	if util.IsClearnceLevelHigherOrEqual(user.ClearanceLevel, caseData.AuthorizationLevel) {
+	if !util.IsClearnceLevelHigherOrEqual(user.ClearanceLevel, caseData.AuthorizationLevel) {
 		return errors.New("insufficient clearance level")
 	}
 
