@@ -1,5 +1,12 @@
 basePath: /api
 definitions:
+  github_com_m7medVision_crime-management-system_internal_dto.AssigneeDTO:
+    properties:
+      userId:
+        type: integer
+    required:
+    - userId
+    type: object
   github_com_m7medVision_crime-management-system_internal_dto.CaseDTO:
     properties:
       area:
@@ -76,6 +83,13 @@ definitions:
     - location
     - name
     - title
+    type: object
+  github_com_m7medVision_crime-management-system_internal_dto.StatusUpdateDTO:
+    properties:
+      status:
+        $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.CaseStatus'
+    required:
+    - status
     type: object
   github_com_m7medVision_crime-management-system_internal_dto.UpdateEvidenceDTO:
     properties:
@@ -632,6 +646,45 @@ paths:
       tags:
       - cases
   /cases/{id}/assignees:
+    delete:
+      consumes:
+      - application/json
+      description: Unassign a user from a case
+      parameters:
+      - description: Case ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User ID to unassign
+        in: body
+        name: assignee
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.AssigneeDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success message
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid case ID or assignee data
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
+        "403":
+          description: Permission denied
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
+      security:
+      - BasicAuth: []
+      summary: Remove assignee from case
+      tags:
+      - cases
+      - assignees
     get:
       consumes:
       - application/json
@@ -669,6 +722,114 @@ paths:
       tags:
       - cases
       - assignees
+    post:
+      consumes:
+      - application/json
+      description: Assign a user to a case
+      parameters:
+      - description: Case ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User ID to assign
+        in: body
+        name: assignee
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.AssigneeDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success message
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid case ID or assignee data
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
+        "403":
+          description: Permission denied
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
+      security:
+      - BasicAuth: []
+      summary: Add assignee to case
+      tags:
+      - cases
+      - assignees
+  /cases/{id}/evidence:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all evidence related to a case
+      parameters:
+      - description: Case ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Evidence'
+            type: array
+        "400":
+          description: Invalid case ID
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
+      security:
+      - BasicAuth: []
+      summary: Get case evidence
+      tags:
+      - cases
+      - evidence
+  /cases/{id}/links:
+    get:
+      consumes:
+      - application/json
+      description: Extract URLs from the case description text
+      parameters:
+      - description: Case ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Extracted links
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+        "400":
+          description: Invalid case ID
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
+      security:
+      - BasicAuth: []
+      summary: Extract links from case description
+      tags:
+      - cases
   /cases/{id}/report:
     get:
       consumes:
@@ -700,6 +861,167 @@ paths:
       summary: Generate case report
       tags:
       - reports
+  /cases/{id}/status:
+    patch:
+      consumes:
+      - application/json
+      description: Update the status of a case (pending, ongoing, closed)
+      parameters:
+      - description: Case ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: New case status
+        in: body
+        name: status
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.StatusUpdateDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Case'
+        "400":
+          description: Invalid case ID or status
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Authentication required
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Permission denied
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Case not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BasicAuth: []
+      summary: Update case status
+      tags:
+      - cases
+  /cases/{id}/suspects:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all suspects related to a case
+      parameters:
+      - description: Case ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Suspect'
+            type: array
+        "400":
+          description: Invalid case ID
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
+      security:
+      - BasicAuth: []
+      summary: Get case suspects
+      tags:
+      - cases
+      - suspects
+  /cases/{id}/victims:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all victims related to a case
+      parameters:
+      - description: Case ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Victim'
+            type: array
+        "400":
+          description: Invalid case ID
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
+      security:
+      - BasicAuth: []
+      summary: Get case victims
+      tags:
+      - cases
+      - victims
+  /cases/{id}/witnesses:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all witnesses related to a case
+      parameters:
+      - description: Case ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_model.Witness'
+            type: array
+        "400":
+          description: Invalid case ID
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
+        "500":
+          description: Server error
+          schema:
+            $ref: '#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO'
+      security:
+      - BasicAuth: []
+      summary: Get case witnesses
+      tags:
+      - cases
+      - witnesses
   /evidence/{id}:
     delete:
       consumes:

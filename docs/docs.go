@@ -313,6 +313,234 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Assign a user to a case",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cases",
+                    "assignees"
+                ],
+                "summary": "Add assignee to case",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Case ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "User ID to assign",
+                        "name": "assignee",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.AssigneeDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success message",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid case ID or assignee data",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Unassign a user from a case",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cases",
+                    "assignees"
+                ],
+                "summary": "Remove assignee from case",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Case ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "User ID to unassign",
+                        "name": "assignee",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.AssigneeDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success message",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid case ID or assignee data",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/cases/{id}/evidence": {
+            "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Retrieve all evidence related to a case",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cases",
+                    "evidence"
+                ],
+                "summary": "Get case evidence",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Case ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_model.Evidence"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid case ID",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/cases/{id}/links": {
+            "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Extract URLs from the case description text",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cases"
+                ],
+                "summary": "Extract links from case description",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Case ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Extracted links",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid case ID",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
+                        }
+                    }
+                }
             }
         },
         "/cases/{id}/report": {
@@ -347,6 +575,256 @@ const docTemplate = `{
                         "description": "PDF report file",
                         "schema": {
                             "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid case ID",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/cases/{id}/status": {
+            "patch": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Update the status of a case (pending, ongoing, closed)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cases"
+                ],
+                "summary": "Update case status",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Case ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New case status",
+                        "name": "status",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.StatusUpdateDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_model.Case"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid case ID or status",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication required",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permission denied",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Case not found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cases/{id}/suspects": {
+            "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Retrieve all suspects related to a case",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cases",
+                    "suspects"
+                ],
+                "summary": "Get case suspects",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Case ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_model.Suspect"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid case ID",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/cases/{id}/victims": {
+            "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Retrieve all victims related to a case",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cases",
+                    "victims"
+                ],
+                "summary": "Get case victims",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Case ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_model.Victim"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid case ID",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_dto.ErrorDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/cases/{id}/witnesses": {
+            "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Retrieve all witnesses related to a case",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cases",
+                    "witnesses"
+                ],
+                "summary": "Get case witnesses",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Case ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_model.Witness"
+                            }
                         }
                     },
                     "400": {
@@ -1272,6 +1750,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "github_com_m7medVision_crime-management-system_internal_dto.AssigneeDTO": {
+            "type": "object",
+            "required": [
+                "userId"
+            ],
+            "properties": {
+                "userId": {
+                    "type": "integer"
+                }
+            }
+        },
         "github_com_m7medVision_crime-management-system_internal_dto.CaseDTO": {
             "type": "object",
             "required": [
@@ -1382,6 +1871,17 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "github_com_m7medVision_crime-management-system_internal_dto.StatusUpdateDTO": {
+            "type": "object",
+            "required": [
+                "status"
+            ],
+            "properties": {
+                "status": {
+                    "$ref": "#/definitions/github_com_m7medVision_crime-management-system_internal_model.CaseStatus"
                 }
             }
         },
