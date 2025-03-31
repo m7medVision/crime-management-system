@@ -612,7 +612,7 @@ func (ctrl *CaseController) GetCaseStatusByReportID(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path int true "Case ID"
-// @Param status body struct{Status model.CaseStatus} true "New case status"
+// @Param status body dto.StatusUpdateDTO true "New case status"
 // @Success 200 {object} model.Case
 // @Failure 400 {object} map[string]string "Invalid case ID or status"
 // @Failure 401 {object} map[string]string "Authentication required"
