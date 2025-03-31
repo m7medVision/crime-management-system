@@ -256,6 +256,19 @@ func (ctrl *CaseController) GetAssignees(c *gin.Context) {
 	c.JSON(http.StatusOK, assignees)
 }
 
+// AddAssignee godoc
+// @Summary Add assignee to case
+// @Description Assign a user to a case
+// @Tags cases,assignees
+// @Accept json
+// @Produce json
+// @Param id path int true "Case ID"
+// @Param assignee body dto.AssigneeDTO true "User ID to assign"
+// @Success 200 {object} map[string]string "Success message"
+// @Failure 400 {object} dto.ErrorDTO "Invalid case ID or assignee data"
+// @Failure 403 {object} dto.ErrorDTO "Permission denied"
+// @Security BasicAuth
+// @Router /cases/{id}/assignees [post]
 func (ctrl *CaseController) AddAssignee(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -287,6 +300,19 @@ func (ctrl *CaseController) AddAssignee(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Assignee added successfully"})
 }
 
+// RemoveAssignee godoc
+// @Summary Remove assignee from case
+// @Description Unassign a user from a case
+// @Tags cases,assignees
+// @Accept json
+// @Produce json
+// @Param id path int true "Case ID"
+// @Param assignee body dto.AssigneeDTO true "User ID to unassign"
+// @Success 200 {object} map[string]string "Success message"
+// @Failure 400 {object} dto.ErrorDTO "Invalid case ID or assignee data"
+// @Failure 403 {object} dto.ErrorDTO "Permission denied"
+// @Security BasicAuth
+// @Router /cases/{id}/assignees [delete]
 func (ctrl *CaseController) RemoveAssignee(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -361,6 +387,18 @@ func (ctrl *CaseController) SubmitCrimeReport(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"reportId": result.ID})
 }
 
+// GetEvidence godoc
+// @Summary Get case evidence
+// @Description Retrieve all evidence related to a case
+// @Tags cases,evidence
+// @Accept json
+// @Produce json
+// @Param id path int true "Case ID"
+// @Success 200 {array} model.Evidence
+// @Failure 400 {object} dto.ErrorDTO "Invalid case ID"
+// @Failure 500 {object} dto.ErrorDTO "Server error"
+// @Security BasicAuth
+// @Router /cases/{id}/evidence [get]
 func (ctrl *CaseController) GetEvidence(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -383,6 +421,18 @@ func (ctrl *CaseController) GetEvidence(c *gin.Context) {
 	c.JSON(http.StatusOK, evidence)
 }
 
+// GetSuspects godoc
+// @Summary Get case suspects
+// @Description Retrieve all suspects related to a case
+// @Tags cases,suspects
+// @Accept json
+// @Produce json
+// @Param id path int true "Case ID"
+// @Success 200 {array} model.Suspect
+// @Failure 400 {object} dto.ErrorDTO "Invalid case ID"
+// @Failure 500 {object} dto.ErrorDTO "Server error"
+// @Security BasicAuth
+// @Router /cases/{id}/suspects [get]
 func (ctrl *CaseController) GetSuspects(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -405,6 +455,18 @@ func (ctrl *CaseController) GetSuspects(c *gin.Context) {
 	c.JSON(http.StatusOK, suspects)
 }
 
+// GetVictims godoc
+// @Summary Get case victims
+// @Description Retrieve all victims related to a case
+// @Tags cases,victims
+// @Accept json
+// @Produce json
+// @Param id path int true "Case ID"
+// @Success 200 {array} model.Victim
+// @Failure 400 {object} dto.ErrorDTO "Invalid case ID"
+// @Failure 500 {object} dto.ErrorDTO "Server error"
+// @Security BasicAuth
+// @Router /cases/{id}/victims [get]
 func (ctrl *CaseController) GetVictims(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -427,6 +489,18 @@ func (ctrl *CaseController) GetVictims(c *gin.Context) {
 	c.JSON(http.StatusOK, victims)
 }
 
+// GetWitnesses godoc
+// @Summary Get case witnesses
+// @Description Retrieve all witnesses related to a case
+// @Tags cases,witnesses
+// @Accept json
+// @Produce json
+// @Param id path int true "Case ID"
+// @Success 200 {array} model.Witness
+// @Failure 400 {object} dto.ErrorDTO "Invalid case ID"
+// @Failure 500 {object} dto.ErrorDTO "Server error"
+// @Security BasicAuth
+// @Router /cases/{id}/witnesses [get]
 func (ctrl *CaseController) GetWitnesses(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -449,6 +523,18 @@ func (ctrl *CaseController) GetWitnesses(c *gin.Context) {
 	c.JSON(http.StatusOK, witnesses)
 }
 
+// ExtractLinks godoc
+// @Summary Extract links from case description
+// @Description Extract URLs from the case description text
+// @Tags cases
+// @Accept json
+// @Produce json
+// @Param id path int true "Case ID"
+// @Success 200 {object} map[string][]string "Extracted links"
+// @Failure 400 {object} dto.ErrorDTO "Invalid case ID"
+// @Failure 500 {object} dto.ErrorDTO "Server error"
+// @Security BasicAuth
+// @Router /cases/{id}/links [get]
 func (c *CaseController) ExtractLinks(ctx *gin.Context) {
 	// Parse case ID from URL parameter
 	caseIDStr := ctx.Param("id")
@@ -519,6 +605,22 @@ func (ctrl *CaseController) GetCaseStatusByReportID(c *gin.Context) {
 	})
 }
 
+// UpdateCaseStatus godoc
+// @Summary Update case status
+// @Description Update the status of a case (pending, ongoing, closed)
+// @Tags cases
+// @Accept json
+// @Produce json
+// @Param id path int true "Case ID"
+// @Param status body struct{Status model.CaseStatus} true "New case status"
+// @Success 200 {object} model.Case
+// @Failure 400 {object} map[string]string "Invalid case ID or status"
+// @Failure 401 {object} map[string]string "Authentication required"
+// @Failure 403 {object} map[string]string "Permission denied"
+// @Failure 404 {object} map[string]string "Case not found"
+// @Failure 500 {object} map[string]string "Server error"
+// @Security BasicAuth
+// @Router /cases/{id}/status [patch]
 func (ctrl *CaseController) UpdateCaseStatus(c *gin.Context) {
 	caseID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
