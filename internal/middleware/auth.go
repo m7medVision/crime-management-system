@@ -7,6 +7,7 @@ import (
 	"github.com/m7medVision/crime-management-system/internal/auth"
 	"github.com/m7medVision/crime-management-system/internal/model"
 	"github.com/m7medVision/crime-management-system/internal/repository"
+	"github.com/m7medVision/crime-management-system/internal/util"
 	"gorm.io/gorm"
 )
 
@@ -63,12 +64,6 @@ func RequireRole(roles ...model.Role) gin.HandlerFunc {
 }
 
 func RequireClearance(minClearance model.ClearanceLevel) gin.HandlerFunc {
-	clearanceLevels := map[model.ClearanceLevel]int{
-		model.ClearanceLow:      1,
-		model.ClearanceMedium:   2,
-		model.ClearanceHigh:     3,
-		model.ClearanceCritical: 4,
-	}
 
 	return func(c *gin.Context) {
 		userInterface, exists := c.Get("user")
@@ -83,10 +78,7 @@ func RequireClearance(minClearance model.ClearanceLevel) gin.HandlerFunc {
 			return
 		}
 
-		userClearance := clearanceLevels[user.ClearanceLevel]
-		requiredClearance := clearanceLevels[minClearance]
-
-		if userClearance < requiredClearance {
+		if util.IsClearnceLevelHigherOrEqual(user.ClearanceLevel, minClearance) {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "Insufficient clearance level"})
 			return
 		}
